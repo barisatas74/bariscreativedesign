@@ -1517,13 +1517,6 @@ function ContactForm() {
               WhatsApp ile yaz
             </a>
             <a
-              href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
-              className="flex items-center gap-3 rounded-2xl border border-ink/15 bg-white/40 px-5 py-3 text-sm font-bold text-ink transition hover:bg-white"
-            >
-              <Phone className="h-5 w-5" />
-              {CONTACT_PHONE}
-            </a>
-            <a
               href={SOCIAL_LINKS.instagram}
               target="_blank"
               rel="noopener noreferrer"
