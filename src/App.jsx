@@ -1523,6 +1523,15 @@ function ContactForm() {
               <Phone className="h-5 w-5" />
               {CONTACT_PHONE}
             </a>
+            <a
+              href={SOCIAL_LINKS.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 rounded-2xl border border-ink/15 bg-white/40 px-5 py-3 text-sm font-bold text-ink transition hover:bg-white"
+            >
+              <Instagram className="h-5 w-5" />
+              @bariscreativedesign
+            </a>
           </div>
         </motion.div>
 
