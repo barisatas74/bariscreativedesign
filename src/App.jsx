@@ -846,14 +846,13 @@ function formatCurrency(value) {
   }
 }
 
-function QuoteCalculator() {
+function Pricing() {
   const [baseId, setBaseId] = useState("multi");
   const [pages, setPages] = useState(5);
   const [features, setFeatures] = useState([]);
 
   const base = QUOTE_BASES.find((b) => b.id === baseId) || QUOTE_BASES[0];
 
-  // Base seçildiğinde sayfa sayısını base default'una sıfırla
   useEffect(() => {
     setPages(base.defaultPages);
   }, [baseId, base.defaultPages]);
@@ -869,6 +868,19 @@ function QuoteCalculator() {
     setFeatures((current) =>
       current.includes(id) ? current.filter((x) => x !== id) : [...current, id],
     );
+  }
+
+  function goToContactWithPlan(planName) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("plan", planName);
+    url.hash = "iletisim";
+    window.history.pushState(null, "", url);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    const target = document.querySelector("#iletisim");
+    if (target) {
+      const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY);
+      window.scrollTo({ top, behavior: "smooth" });
+    }
   }
 
   function goToContactWithQuote(event) {
@@ -889,225 +901,12 @@ function QuoteCalculator() {
     } catch {
       /* ignore */
     }
-    const url = new URL(window.location.href);
-    url.searchParams.set("plan", base.label);
-    url.hash = "iletisim";
-    window.history.pushState(null, "", url);
-    window.dispatchEvent(new PopStateEvent("popstate"));
     window.dispatchEvent(new CustomEvent("bcd:quote-summary", { detail: { summary } }));
-    const target = document.querySelector("#iletisim");
-    if (target) {
-      const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY);
-      window.scrollTo({ top, behavior: "smooth" });
-    }
+    goToContactWithPlan(base.label);
   }
 
   return (
-    <section id="hesapla" className="relative overflow-hidden bg-bone py-20 text-ink scroll-mt-20 sm:py-24">
-      <div className="ambient-cloud ambient-cloud--bright pointer-events-none absolute -right-40 top-12 h-96 w-[40rem] [--cloud-opacity-end:0.42] [--cloud-opacity-start:0.2]" />
-      <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 bottom-10 hidden h-80 w-[34rem] lg:block" />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.35 }}
-          variants={fadeUp}
-          className="max-w-3xl"
-        >
-          <SectionLabel>Bütçe hesabı</SectionLabel>
-          <h2 className="font-display text-[clamp(2rem,5vw,3.6rem)] font-black leading-[1.02]">
-            Aklındaki proje ne kadar tutar?
-          </h2>
-          <p className="mt-4 max-w-xl text-base leading-7 text-ink/65 sm:text-lg">
-            Hızlı bir tahmini bütçe çıkar — net fiyat için aynı bilgileri form üzerinden
-            paylaşırsın, 24 saat içinde detaylı teklif gelir.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 grid gap-5 lg:grid-cols-[1.4fr_1fr]"
-        >
-          {/* Sol panel: seçimler */}
-          <div className="rounded-[28px] border border-ink/10 bg-white/80 p-6 backdrop-blur sm:p-8">
-            <fieldset>
-              <legend className="font-display text-xs font-black uppercase tracking-[0.22em] text-ink/55">
-                Proje türü
-              </legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {QUOTE_BASES.map((b) => {
-                  const isActive = baseId === b.id;
-                  return (
-                    <label
-                      key={b.id}
-                      className={`flex cursor-pointer items-start justify-between gap-3 rounded-2xl border p-4 transition ${
-                        isActive
-                          ? "border-ink bg-ink text-white"
-                          : "border-ink/10 bg-white hover:border-ink/30"
-                      }`}
-                    >
-                      <div>
-                        <p className="font-display text-sm font-black sm:text-base">
-                          {b.label}
-                        </p>
-                        <p className={`mt-1 text-xs font-semibold ${isActive ? "text-white/65" : "text-ink/55"}`}>
-                          {b.includesPages} sayfa dahil • {formatCurrency(b.price)}'den başlar
-                        </p>
-                      </div>
-                      <input
-                        type="radio"
-                        name="quote-base"
-                        value={b.id}
-                        checked={isActive}
-                        onChange={() => setBaseId(b.id)}
-                        className="sr-only"
-                      />
-                      <span
-                        className={`mt-1 h-5 w-5 shrink-0 rounded-full border-2 transition ${
-                          isActive ? "border-acid bg-acid" : "border-ink/30"
-                        }`}
-                        aria-hidden
-                      />
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-
-            <div className="mt-6">
-              <div className="flex items-end justify-between">
-                <label htmlFor="quote-pages" className="font-display text-xs font-black uppercase tracking-[0.22em] text-ink/55">
-                  Sayfa sayısı
-                </label>
-                <span className="font-display text-2xl font-black tabular-nums">
-                  {pages}
-                </span>
-              </div>
-              <input
-                id="quote-pages"
-                type="range"
-                min={1}
-                max={20}
-                value={pages}
-                onChange={(e) => setPages(Number(e.target.value))}
-                className="mt-3 w-full accent-ink"
-              />
-              <p className="mt-2 text-xs text-ink/55">
-                Pakete dahil: {base.includesPages} sayfa
-                {extraPages > 0 && ` • Ek: ${extraPages} × ${formatCurrency(PER_EXTRA_PAGE)}`}
-              </p>
-            </div>
-
-            <fieldset className="mt-6">
-              <legend className="font-display text-xs font-black uppercase tracking-[0.22em] text-ink/55">
-                Eklemek istediklerin
-              </legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {QUOTE_FEATURES.map((f) => {
-                  const isActive = features.includes(f.id);
-                  return (
-                    <label
-                      key={f.id}
-                      className={`flex cursor-pointer items-center justify-between gap-3 rounded-2xl border p-3 text-sm transition ${
-                        isActive
-                          ? "border-ink bg-ink text-white"
-                          : "border-ink/10 bg-white hover:border-ink/30"
-                      }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <span
-                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${
-                            isActive ? "border-acid bg-acid" : "border-ink/30"
-                          }`}
-                          aria-hidden
-                        >
-                          {isActive && <Check className="h-3 w-3 text-ink" strokeWidth={3} />}
-                        </span>
-                        <span className="font-semibold">{f.label}</span>
-                      </span>
-                      <span
-                        className={`text-xs font-black tabular-nums ${
-                          isActive ? "text-acid" : "text-ink/55"
-                        }`}
-                      >
-                        +{formatCurrency(f.price)}
-                      </span>
-                      <input
-                        type="checkbox"
-                        checked={isActive}
-                        onChange={() => toggleFeature(f.id)}
-                        className="sr-only"
-                      />
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-          </div>
-
-          {/* Sağ panel: özet */}
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-[28px] bg-ink p-6 text-white shadow-[0_24px_70px_rgba(5,5,5,0.18)] sm:p-8">
-              <p className="font-display text-xs font-black uppercase tracking-[0.22em] text-acid">
-                Tahmini bütçe
-              </p>
-              <p className="mt-3 font-display text-4xl font-black leading-none tabular-nums sm:text-5xl">
-                {formatCurrency(total)}
-              </p>
-              <p className="mt-2 text-xs font-semibold text-white/55">+ KDV</p>
-
-              <div className="mt-6 space-y-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-white/65">{base.label}</span>
-                  <span className="font-bold tabular-nums">{formatCurrency(base.price)}</span>
-                </div>
-                {extraPages > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/65">Ek {extraPages} sayfa</span>
-                    <span className="font-bold tabular-nums">
-                      {formatCurrency(extraPages * PER_EXTRA_PAGE)}
-                    </span>
-                  </div>
-                )}
-                {features.map((id) => {
-                  const f = QUOTE_FEATURES.find((x) => x.id === id);
-                  if (!f) return null;
-                  return (
-                    <div key={id} className="flex items-center justify-between">
-                      <span className="text-white/65">{f.label}</span>
-                      <span className="font-bold tabular-nums">{formatCurrency(f.price)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <button
-                type="button"
-                onClick={goToContactWithQuote}
-                data-magnetic="0.18"
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-acid px-6 py-3 text-sm font-black text-ink transition will-change-transform hover:bg-white"
-              >
-                Bu seçimle teklif iste
-                <ArrowRight className="h-4 w-4" />
-              </button>
-              <p className="mt-3 text-center text-[11px] font-semibold text-white/50">
-                Bu rakam yön gösterici — net fiyat brief sonrası belirlenir.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function Pricing() {
-  return (
-    <section id="fiyatlandirma" className="relative overflow-hidden bg-ink py-24 text-white scroll-mt-20 sm:py-28">
+    <section id="fiyatlandirma" className="relative overflow-hidden bg-ink py-20 text-white scroll-mt-20 sm:py-24">
       <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-12 h-96 w-[36rem]" />
       <div className="ambient-cloud pointer-events-none absolute -right-40 bottom-12 hidden h-96 w-[40rem] md:block" />
 
@@ -1119,13 +918,13 @@ function Pricing() {
           variants={fadeUp}
           className="max-w-3xl"
         >
-          <SectionLabel tone="light">Fiyatlandırma</SectionLabel>
+          <SectionLabel tone="light">Fiyatlandırma & Bütçe</SectionLabel>
           <h2 className="font-display text-[clamp(2rem,5vw,3.8rem)] font-black leading-[1.02]">
-            Şeffaf paketler. Sürpriz yok.
+            Şeffaf paketler. Şeffaf hesap.
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
-            Çoğu marka için ihtiyacın olan paket Pro. Daha küçük başlangıçlar ve özel
-            kapsamlı projeler için diğer iki seçenek de hazır.
+            Hazır paketlerden birini seç ya da aşağıdaki hesaplayıcı ile kendi
+            bütçeni özelleştir. Net fiyat her iki yolda da brief sonrası paylaşılır.
           </p>
         </motion.div>
 
@@ -1134,7 +933,7 @@ function Pricing() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={stagger}
-          className="mt-12 grid gap-5 lg:grid-cols-3"
+          className="mt-10 grid gap-5 lg:grid-cols-3"
         >
           {pricingPlans.map((plan) => (
             <motion.article
@@ -1176,22 +975,9 @@ function Pricing() {
                   </li>
                 ))}
               </ul>
-              <a
-                href={`#iletisim?plan=${encodeURIComponent(plan.name)}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  // URL'e paket bilgisini yaz, ContactForm okuyacak
-                  const url = new URL(window.location.href);
-                  url.searchParams.set("plan", plan.name);
-                  url.hash = "iletisim";
-                  window.history.pushState(null, "", url);
-                  window.dispatchEvent(new PopStateEvent("popstate"));
-                  const target = document.querySelector("#iletisim");
-                  if (target) {
-                    const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY);
-                    window.scrollTo({ top, behavior: "smooth" });
-                  }
-                }}
+              <button
+                type="button"
+                onClick={() => goToContactWithPlan(plan.name)}
                 className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-black transition ${
                   plan.highlighted
                     ? "bg-ink text-white hover:bg-white hover:text-ink"
@@ -1200,12 +986,215 @@ function Pricing() {
               >
                 {plan.cta}
                 <ArrowRight className="h-4 w-4" />
-              </a>
+              </button>
             </motion.article>
           ))}
         </motion.div>
 
-        <p className="mt-10 text-center text-xs font-semibold text-white/45">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-16 flex items-center gap-5 sm:mt-20"
+        >
+          <span className="h-px flex-1 bg-white/12" />
+          <span className="font-display text-xs font-black uppercase tracking-[0.24em] text-white/55">
+            ya da kendi bütçeni hesapla
+          </span>
+          <span className="h-px flex-1 bg-white/12" />
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.35 }}
+          variants={fadeUp}
+          className="mt-8 max-w-2xl"
+        >
+          <h3 className="font-display text-[clamp(1.6rem,3.5vw,2.6rem)] font-black leading-[1.05]">
+            Aklındaki proje ne kadar tutar?
+          </h3>
+          <p className="mt-3 text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
+            Proje türü, sayfa sayısı ve eklemek istediklerini seç — anlık tahmini bütçeyi gör.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-8 grid gap-5 lg:grid-cols-[1.4fr_1fr]"
+        >
+          <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur sm:p-8">
+            <fieldset>
+              <legend className="font-display text-xs font-black uppercase tracking-[0.22em] text-white/55">
+                Proje türü
+              </legend>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {QUOTE_BASES.map((b) => {
+                  const isActive = baseId === b.id;
+                  return (
+                    <label
+                      key={b.id}
+                      className={`flex cursor-pointer items-start justify-between gap-3 rounded-2xl border p-4 transition ${
+                        isActive
+                          ? "border-acid bg-acid text-ink"
+                          : "border-white/10 bg-white/[0.03] text-white hover:border-white/30"
+                      }`}
+                    >
+                      <div>
+                        <p className="font-display text-sm font-black sm:text-base">
+                          {b.label}
+                        </p>
+                        <p className={`mt-1 text-xs font-semibold ${isActive ? "text-ink/70" : "text-white/55"}`}>
+                          {b.includesPages} sayfa dahil • {formatCurrency(b.price)}'den başlar
+                        </p>
+                      </div>
+                      <input
+                        type="radio"
+                        name="quote-base"
+                        value={b.id}
+                        checked={isActive}
+                        onChange={() => setBaseId(b.id)}
+                        className="sr-only"
+                      />
+                      <span
+                        className={`mt-1 h-5 w-5 shrink-0 rounded-full border-2 transition ${
+                          isActive ? "border-ink bg-ink" : "border-white/40"
+                        }`}
+                        aria-hidden
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <div className="mt-6">
+              <div className="flex items-end justify-between">
+                <label htmlFor="quote-pages" className="font-display text-xs font-black uppercase tracking-[0.22em] text-white/55">
+                  Sayfa sayısı
+                </label>
+                <span className="font-display text-2xl font-black tabular-nums">
+                  {pages}
+                </span>
+              </div>
+              <input
+                id="quote-pages"
+                type="range"
+                min={1}
+                max={20}
+                value={pages}
+                onChange={(e) => setPages(Number(e.target.value))}
+                className="mt-3 w-full accent-acid"
+              />
+              <p className="mt-2 text-xs text-white/55">
+                Pakete dahil: {base.includesPages} sayfa
+                {extraPages > 0 && ` • Ek: ${extraPages} × ${formatCurrency(PER_EXTRA_PAGE)}`}
+              </p>
+            </div>
+
+            <fieldset className="mt-6">
+              <legend className="font-display text-xs font-black uppercase tracking-[0.22em] text-white/55">
+                Eklemek istediklerin
+              </legend>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {QUOTE_FEATURES.map((f) => {
+                  const isActive = features.includes(f.id);
+                  return (
+                    <label
+                      key={f.id}
+                      className={`flex cursor-pointer items-center justify-between gap-3 rounded-2xl border p-3 text-sm transition ${
+                        isActive
+                          ? "border-acid bg-acid text-ink"
+                          : "border-white/10 bg-white/[0.03] text-white hover:border-white/30"
+                      }`}
+                    >
+                      <span className="flex items-center gap-3">
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${
+                            isActive ? "border-ink bg-ink" : "border-white/40"
+                          }`}
+                          aria-hidden
+                        >
+                          {isActive && <Check className="h-3 w-3 text-acid" strokeWidth={3} />}
+                        </span>
+                        <span className="font-semibold">{f.label}</span>
+                      </span>
+                      <span
+                        className={`text-xs font-black tabular-nums ${
+                          isActive ? "text-ink/80" : "text-white/55"
+                        }`}
+                      >
+                        +{formatCurrency(f.price)}
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={() => toggleFeature(f.id)}
+                        className="sr-only"
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+          </div>
+
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div className="rounded-[28px] bg-acid p-6 text-ink shadow-[0_30px_90px_rgba(215,255,54,0.28)] sm:p-8">
+              <p className="font-display text-xs font-black uppercase tracking-[0.22em] text-ink/70">
+                Tahmini bütçe
+              </p>
+              <p className="mt-3 font-display text-4xl font-black leading-none tabular-nums sm:text-5xl">
+                {formatCurrency(total)}
+              </p>
+              <p className="mt-2 text-xs font-semibold text-ink/65">+ KDV</p>
+
+              <div className="mt-6 space-y-2 border-t border-ink/15 pt-5 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-ink/72">{base.label}</span>
+                  <span className="font-bold tabular-nums">{formatCurrency(base.price)}</span>
+                </div>
+                {extraPages > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-ink/72">Ek {extraPages} sayfa</span>
+                    <span className="font-bold tabular-nums">
+                      {formatCurrency(extraPages * PER_EXTRA_PAGE)}
+                    </span>
+                  </div>
+                )}
+                {features.map((id) => {
+                  const f = QUOTE_FEATURES.find((x) => x.id === id);
+                  if (!f) return null;
+                  return (
+                    <div key={id} className="flex items-center justify-between">
+                      <span className="text-ink/72">{f.label}</span>
+                      <span className="font-bold tabular-nums">{formatCurrency(f.price)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                onClick={goToContactWithQuote}
+                data-magnetic="0.18"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition will-change-transform hover:bg-white hover:text-ink"
+              >
+                Bu seçimle teklif iste
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <p className="mt-3 text-center text-[11px] font-semibold text-ink/65">
+                Bu rakam yön gösterici — net fiyat brief sonrası belirlenir.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        <p className="mt-12 text-center text-xs font-semibold text-white/45">
           Fiyatlar KDV hariçtir. Ödeme planı: %50 başlangıç, %50 teslim.
         </p>
       </div>
@@ -2294,7 +2283,6 @@ export default function App() {
         <Manifesto />
         <Guarantees />
         <Process />
-        <QuoteCalculator />
         <Pricing />
         <FAQ />
         <ContactForm />
