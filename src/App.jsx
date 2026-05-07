@@ -64,7 +64,6 @@ const titleReveal = {
 const navItems = [
   ["Hizmetler", "#hizmetler"],
   ["Yaklaşım", "#yaklasim"],
-  ["İşler", "#isler"],
   ["Süreç", "#surec"],
   ["Fiyatlandırma", "#fiyatlandirma"],
   ["SSS", "#sss"],
@@ -115,7 +114,7 @@ function scrollToSection(event, href, afterScroll) {
   if (!target) return;
 
   event.preventDefault();
-  const flushSections = new Set(["#top", "#isler", "#iletisim"]);
+  const flushSections = new Set(["#top", "#iletisim"]);
   const offset = flushSections.has(href) ? 0 : SCROLL_OFFSET;
   const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset);
 
@@ -152,45 +151,6 @@ const services = [
     text: "İş süreçlerini hızlandıran, manuel yükü azaltan dijital sistemler.",
     icon: Bot,
     color: "bg-violet text-white",
-  },
-];
-
-const works = [
-  {
-    title: "Premium Güzellik Merkezi Web Sitesi",
-    category: "Web Tasarım",
-    year: "2026",
-    text: "Randevu alma isteğini artıran, güven veren ve lüks hissi taşıyan dijital vitrin.",
-    image:
-      "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1000&q=85",
-    accent: "bg-coral",
-  },
-  {
-    title: "Modern E-Ticaret Arayüzü",
-    category: "E-Ticaret UI",
-    year: "2026",
-    text: "Ürün keşfini hızlandıran, mobil alışveriş akışını sadeleştiren mağaza deneyimi.",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=85",
-    accent: "bg-acid",
-  },
-  {
-    title: "Kurumsal İnşaat Firma Sitesi",
-    category: "Kurumsal Web",
-    year: "2025",
-    text: "Referansları güçlü gösteren, yatırımcı ve müşteri güvenini öne çıkaran yapı.",
-    image:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1000&q=85",
-    accent: "bg-cyan",
-  },
-  {
-    title: "AI Destekli İşletme Otomasyonu",
-    category: "AI Sistemler",
-    year: "2025",
-    text: "Manuel takipleri azaltan, teklif ve müşteri süreçlerini düzenleyen akıllı akış.",
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=85",
-    accent: "bg-violet",
   },
 ];
 
@@ -459,11 +419,11 @@ function Hero() {
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </a>
             <a
-              href="#isler"
-              onClick={(event) => scrollToSection(event, "#isler")}
+              href="#hizmetler"
+              onClick={(event) => scrollToSection(event, "#hizmetler")}
               className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 px-7 text-base font-bold text-white transition hover:border-white hover:bg-white hover:text-ink"
             >
-              Çalışmaları Gör
+              Hizmetleri Gör
             </a>
           </motion.div>
         </motion.div>
@@ -721,137 +681,6 @@ function Manifesto() {
             ))}
           </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function Work() {
-  const categories = ["Tümü", ...Array.from(new Set(works.map((w) => w.category)))];
-  const [activeCategory, setActiveCategory] = useState("Tümü");
-  const filteredWorks =
-    activeCategory === "Tümü"
-      ? works
-      : works.filter((w) => w.category === activeCategory);
-
-  return (
-    <section id="isler" className="scroll-scene relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink py-14 text-white sm:py-16">
-      <div className="ambient-cloud pointer-events-none absolute -right-36 top-8 h-96 w-[40rem]" />
-      <div className="ambient-cloud ambient-cloud--soft ambient-cloud--slow pointer-events-none absolute -left-40 bottom-[-5rem] hidden h-80 w-[36rem] lg:block" />
-
-      <div className="scene-content mx-auto w-full max-w-7xl px-5 sm:px-8">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.35 }}
-          variants={fadeUp}
-          className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end"
-        >
-          <div className="max-w-3xl">
-            <SectionLabel tone="light">Seçili işler</SectionLabel>
-            <h2 className="font-display text-[clamp(1.9rem,4.4vw,3.6rem)] font-black leading-[1.05]">
-              Markaları daha güçlü gösteren dijital işler.
-            </h2>
-          </div>
-          <p className="max-w-sm text-base leading-7 text-white/65">
-            Her proje, markanın daha profesyonel algılanması ve müşterinin daha hızlı
-            aksiyon alması için kurgulanır.
-          </p>
-        </motion.div>
-
-        <div className="mt-8 flex flex-wrap gap-2" role="tablist" aria-label="Proje kategorileri">
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setActiveCategory(cat)}
-                className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.18em] transition duration-300 ${
-                  isActive
-                    ? "border-acid bg-acid text-ink"
-                    : "border-white/15 text-white/65 hover:border-white/40 hover:text-white"
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {filteredWorks.length === 0 && (
-              <p className="col-span-full rounded-[24px] border border-white/10 bg-white/[0.03] p-8 text-center text-sm text-white/55">
-                Bu kategoride henüz seçili iş yok.
-              </p>
-            )}
-            {filteredWorks.map((work, index) => (
-            <motion.article
-              key={work.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.42, delay: index * 0.04, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.04] transition duration-500 hover:-translate-y-2 hover:border-white/25"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={work.image}
-                  alt={work.title}
-                  width="1000"
-                  height="750"
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover grayscale transition duration-700 group-hover:scale-110 group-hover:grayscale-0"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/72 via-ink/10 to-transparent" />
-                <div className="absolute left-4 top-4 flex items-center gap-2">
-                  <span className={`h-10 w-10 rounded-full ${work.accent}`} />
-                  <span className="rounded-full bg-ink/80 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-white backdrop-blur">
-                    {work.year}
-                  </span>
-                </div>
-                <span className="absolute bottom-3 right-4 font-display text-6xl font-black text-white/38">
-                  0{index + 1}
-                </span>
-              </div>
-
-              <div className="p-5">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/45">
-                    {work.category}
-                  </span>
-                  <span className="h-px flex-1 bg-white/10" />
-                </div>
-                <h3 className="font-display text-xl font-black leading-tight text-white">
-                  {work.title}
-                </h3>
-                <p className="mt-3 min-h-[72px] text-sm font-semibold leading-6 text-white/58">
-                  {work.text}
-                </p>
-                <a
-                  href="#iletisim"
-                  onClick={(event) => scrollToSection(event, "#iletisim")}
-                  className="mt-5 inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-acid transition group-hover:text-white"
-                >
-                  Benzerini Konuşalım
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </a>
-              </div>
-            </motion.article>
-            ))}
-          </motion.div>
-        </AnimatePresence>
       </div>
     </section>
   );
@@ -2463,7 +2292,6 @@ export default function App() {
           <Services />
         </div>
         <Manifesto />
-        <Work />
         <Guarantees />
         <Process />
         <QuoteCalculator />
