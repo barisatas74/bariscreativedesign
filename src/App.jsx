@@ -5,10 +5,12 @@ import {
   Bot,
   Check,
   ChevronDown,
+  Clock,
   Code2,
   Instagram,
   Linkedin,
   Mail,
+  MapPin,
   Menu,
   MessageCircle,
   MousePointer2,
@@ -1525,6 +1527,33 @@ function ContactForm() {
               <Instagram className="h-5 w-5" />
               @bariscreativedesign
             </a>
+            <a
+              href={SOCIAL_LINKS.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 rounded-2xl border border-ink/15 bg-white/40 px-5 py-3 text-sm font-bold text-ink transition hover:bg-white"
+            >
+              <Linkedin className="h-5 w-5" />
+              LinkedIn
+            </a>
+          </div>
+
+          <div className="mt-6 space-y-2 rounded-2xl border border-ink/15 bg-white/40 p-4">
+            <p className="flex items-center gap-2.5 text-sm font-bold text-ink">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-600" />
+              </span>
+              Genelde 1-2 saat içinde dönüyorum
+            </p>
+            <p className="flex items-center gap-2.5 text-sm font-semibold text-ink/75">
+              <MapPin className="h-4 w-4 shrink-0" />
+              Bursa'dan Türkiye geneline uzaktan çalışıyorum
+            </p>
+            <p className="flex items-center gap-2.5 text-sm font-semibold text-ink/75">
+              <Clock className="h-4 w-4 shrink-0" />
+              Pzt-Cmt • 09:00 - 19:00
+            </p>
           </div>
         </motion.div>
 
