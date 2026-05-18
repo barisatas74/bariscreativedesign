@@ -949,42 +949,27 @@ function Pricing() {
   }
 
   return (
-    <section id="teklif" className="relative overflow-hidden bg-ink py-12 text-white scroll-mt-20 sm:py-14 lg:min-h-[calc(100svh-5rem)] lg:flex lg:items-center">
+    <section id="teklif" className="relative overflow-hidden bg-ink py-10 text-white scroll-mt-20 sm:py-12 lg:min-h-[calc(100svh-5rem)] lg:flex lg:items-center">
       <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-12 h-96 w-[36rem]" />
       <div className="ambient-cloud pointer-events-none absolute -right-40 bottom-12 hidden h-96 w-[40rem] md:block" />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-6 px-5 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.35 }}
           variants={fadeUp}
-          className="max-w-xl"
+          className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
         >
-          <SectionLabel tone="light">Teklif & Uygun Çözüm</SectionLabel>
-          <h2 className="font-display text-[clamp(2rem,4.2vw,3.6rem)] font-black leading-[1.02]">
-            Doğru çözümü birlikte seçelim.
-          </h2>
-          <p className="mt-4 text-base font-semibold leading-7 text-white/62">
-            Rakamdan önce ihtiyacı netleştiririz. Sen hangi başlığa yakın olduğunu seç,
-            ben kapsamı sadeleştirip samimi teklif haline getireyim.
-          </p>
-
-          <div className="mt-6 grid gap-3">
-            {[
-              ["01", "Kısa keşif", "İşini ve hedefini anlarız."],
-              ["02", "Net kapsam", "Gereksiz işi ayıklarız."],
-              ["03", "Samimi teklif", "Sürprizsiz yol haritası çıkar."],
-            ].map(([number, title, text]) => (
-              <div key={title} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
-                <span className="font-display text-3xl font-black text-acid">{number}</span>
-                <div>
-                  <p className="font-display text-base font-black">{title}</p>
-                  <p className="text-xs font-semibold leading-5 text-white/55">{text}</p>
-                </div>
-              </div>
-            ))}
+          <div className="max-w-3xl">
+            <SectionLabel tone="light">Teklif & Uygun Çözüm</SectionLabel>
+            <h2 className="font-display text-[clamp(2rem,3.4vw,3.05rem)] font-black leading-[1.02]">
+              Çözümünü seç, kapsamı birlikte netleştirelim.
+            </h2>
           </div>
+          <p className="max-w-md text-sm font-semibold leading-6 text-white/62 sm:text-base sm:leading-7">
+            Rakamdan önce ihtiyacı konuşuruz. Sana en yakın başlığı seç, formda kapsamı birlikte netleştirelim.
+          </p>
         </motion.div>
 
         <motion.div
@@ -992,81 +977,74 @@ function Pricing() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={stagger}
-          className="grid gap-3"
+          className="mt-6 grid gap-4 lg:grid-cols-3"
         >
           {solutionTracks.map((track) => (
             <motion.article
               key={track.name}
               variants={fadeUp}
-              className={`group relative overflow-hidden rounded-[26px] p-5 transition duration-300 hover:-translate-y-1 sm:p-6 ${
+              className={`group relative flex min-h-[360px] flex-col overflow-hidden rounded-[26px] p-5 transition duration-300 hover:-translate-y-1 sm:p-6 ${
                 track.highlighted
                   ? "bg-acid text-ink shadow-[0_26px_80px_rgba(215,255,54,0.25)]"
                   : "border border-white/10 bg-white/[0.045] text-white hover:border-white/24 hover:bg-white/[0.07]"
               }`}
             >
-              <div className="grid gap-5 xl:grid-cols-[1fr_18rem] xl:items-center">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className={`text-[11px] font-black uppercase tracking-[0.22em] ${track.highlighted ? "text-ink/62" : "text-white/45"}`}>
-                      {track.eyebrow}
-                    </p>
-                    {track.highlighted && (
-                      <span className="rounded-full bg-ink px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-acid">
-                        En dengeli
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="mt-3 font-display text-[clamp(1.8rem,3vw,2.8rem)] font-black leading-[0.95]">
-                    {track.name}
-                  </h3>
-                  <p className={`mt-3 max-w-2xl text-sm font-semibold leading-6 ${track.highlighted ? "text-ink/74" : "text-white/62"}`}>
-                    {track.desc}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {track.bestFor.map((item) => (
-                      <span
-                        key={item}
-                        className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
-                          track.highlighted ? "bg-ink/10 text-ink/70" : "bg-white/8 text-white/55"
-                        }`}
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <ul className="grid gap-2 text-sm font-semibold">
-                    {track.features.slice(0, 3).map((feature) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <span
-                          className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                            track.highlighted ? "bg-ink text-acid" : "bg-acid text-ink"
-                          }`}
-                        >
-                          <Check className="h-3 w-3" strokeWidth={3} />
-                        </span>
-                        <span className={track.highlighted ? "text-ink/84" : "text-white/76"}>
-                          {feature}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                  <button
-                    type="button"
-                    onClick={() => goToContactWithSolution(track)}
-                    className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-black transition ${
-                      track.highlighted
-                        ? "bg-ink text-white hover:bg-white hover:text-ink"
-                        : "border border-white/20 hover:border-white hover:bg-white hover:text-ink"
+              <div className="flex flex-wrap items-center gap-2">
+                <p className={`text-[11px] font-black uppercase tracking-[0.22em] ${track.highlighted ? "text-ink/62" : "text-white/45"}`}>
+                  {track.eyebrow}
+                </p>
+                {track.highlighted && (
+                  <span className="rounded-full bg-ink px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-acid">
+                    En dengeli
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-3 font-display text-[clamp(1.7rem,2.4vw,2.35rem)] font-black leading-[0.96]">
+                {track.name}
+              </h3>
+              <p className={`mt-3 text-sm font-semibold leading-6 ${track.highlighted ? "text-ink/74" : "text-white/62"}`}>
+                {track.desc}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {track.bestFor.slice(0, 2).map((item) => (
+                  <span
+                    key={item}
+                    className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+                      track.highlighted ? "bg-ink/10 text-ink/70" : "bg-white/8 text-white/55"
                     }`}
                   >
-                    {track.cta}
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                </div>
+                    {item}
+                  </span>
+                ))}
               </div>
+              <ul className="mt-5 grid gap-2 text-sm font-semibold">
+                {track.features.slice(0, 2).map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <span
+                      className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
+                        track.highlighted ? "bg-ink text-acid" : "bg-acid text-ink"
+                      }`}
+                    >
+                      <Check className="h-3 w-3" strokeWidth={3} />
+                    </span>
+                    <span className={track.highlighted ? "text-ink/84" : "text-white/76"}>
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => goToContactWithSolution(track)}
+                className={`mt-auto inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-black transition ${
+                  track.highlighted
+                    ? "bg-ink text-white hover:bg-white hover:text-ink"
+                    : "border border-white/20 hover:border-white hover:bg-white hover:text-ink"
+                }`}
+              >
+                {track.cta}
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </motion.article>
           ))}
         </motion.div>
