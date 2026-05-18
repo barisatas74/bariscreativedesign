@@ -45,7 +45,7 @@ const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
 
 const SCROLL_OFFSET = 80;
 const SECTION_SCROLL_ADJUST = {
-  "#yaklasim": 120,
+  "#yaklasim": 56,
 };
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
