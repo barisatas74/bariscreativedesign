@@ -3,10 +3,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Bot,
+  BriefcaseBusiness,
+  Building2,
   Check,
   ChevronDown,
   Clock,
   Code2,
+  Coffee,
+  GraduationCap,
+  HeartPulse,
+  Home,
   Instagram,
   Linkedin,
   Mail,
@@ -15,6 +21,8 @@ import {
   MessageCircle,
   MousePointer2,
   Phone,
+  Scissors,
+  ShoppingBag,
   Sparkles,
   Store,
   X,
@@ -198,14 +206,46 @@ const heroTitleLines = [
 ];
 
 const industries = [
-  "GÜZELLİK & WELLNESS",
-  "E-TİCARET",
-  "İNŞAAT & MİMARİ",
-  "RESTORAN & KAFE",
-  "DANIŞMANLIK",
-  "EĞİTİM & KURS",
-  "SAĞLIK & KLİNİK",
-  "EMLAK",
+  {
+    name: "Güzellik & Wellness",
+    note: "Randevu, güven ve premium algı",
+    icon: Scissors,
+  },
+  {
+    name: "E-Ticaret",
+    note: "Ürün odağı, hızlı aksiyon, satış akışı",
+    icon: ShoppingBag,
+  },
+  {
+    name: "İnşaat & Mimari",
+    note: "Portföy, proje sunumu ve kurumsal güven",
+    icon: Building2,
+  },
+  {
+    name: "Restoran & Kafe",
+    note: "Menü, konum, rezervasyon ve marka hissi",
+    icon: Coffee,
+  },
+  {
+    name: "Danışmanlık",
+    note: "Uzmanlık algısı ve net iletişim",
+    icon: BriefcaseBusiness,
+  },
+  {
+    name: "Eğitim & Kurs",
+    note: "Program anlatımı ve başvuru akışı",
+    icon: GraduationCap,
+  },
+  {
+    name: "Sağlık & Klinik",
+    note: "Temiz görünüm, güven ve hızlı temas",
+    icon: HeartPulse,
+  },
+  {
+    name: "Emlak",
+    note: "İlan, lokasyon ve güçlü ilk izlenim",
+    icon: Home,
+  },
 ];
 
 const guarantees = [
@@ -471,20 +511,52 @@ function Hero() {
 
 function ClientLogos() {
   return (
-    <section aria-label="Hizmet verilen sektörler" className="relative bg-ink py-10 text-white">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <p className="mb-6 text-center text-[11px] font-black uppercase tracking-[0.32em] text-white/40">
-          Hizmet verdiğim sektörler
-        </p>
-        <div className="marquee">
-          <div className="marquee-track marquee-track--logos gap-12 text-2xl font-black tracking-[0.18em] text-white/55 sm:text-3xl">
-            <span aria-hidden="false" className="font-display whitespace-nowrap">
-              {industries.join("  •  ")}
-            </span>
-            <span aria-hidden="true" className="font-display whitespace-nowrap">
-              {industries.join("  •  ")}
-            </span>
+    <section aria-label="Hizmet verilen sektörler" className="relative overflow-hidden bg-ink py-14 text-white sm:py-16">
+      <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-0 h-72 w-[32rem]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <SectionLabel tone="light">Sektörler</SectionLabel>
+            <h2 className="font-display text-[clamp(1.9rem,4vw,3.4rem)] font-black leading-[1.02]">
+              Her sektör için aynı şablon değil, doğru his.
+            </h2>
           </div>
+          <p className="max-w-md text-sm font-semibold leading-6 text-white/58 sm:text-base sm:leading-7">
+            Müşterinin ilk baktığı şey sektöre göre değişir. Tasarımı da buna göre
+            güven, hız ve aksiyon etrafında kurarım.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {industries.map(({ name, note, icon: Icon }, index) => (
+            <motion.article
+              key={name}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.42, delay: index * 0.035, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.045] p-5 transition duration-500 hover:-translate-y-1 hover:border-acid/45 hover:bg-white/[0.075]"
+            >
+              <span className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-acid/0 blur-2xl transition duration-500 group-hover:bg-acid/18" />
+              <div className="relative flex items-start justify-between gap-4">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-acid text-ink shadow-[0_16px_42px_rgba(215,255,54,0.18)] transition duration-500 group-hover:-rotate-6 group-hover:scale-105">
+                  <Icon className="h-5 w-5" strokeWidth={2.4} />
+                </span>
+                <span className="font-display text-3xl font-black leading-none text-white/10 transition duration-500 group-hover:text-acid/30">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <h3 className="relative mt-5 font-display text-xl font-black leading-tight text-white">
+                {name}
+              </h3>
+              <p className="relative mt-2 text-sm font-semibold leading-6 text-white/56">
+                {note}
+              </p>
+            </motion.article>
+          ))}
         </div>
       </div>
     </section>
@@ -673,13 +745,13 @@ function Manifesto() {
             whileInView={{ opacity: 1, y: 0, rotate: 4 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute right-0 top-36 w-[72%] rounded-[34px] border border-white/10 bg-white/[0.06] p-7 text-white shadow-[0_28px_80px_rgba(0,0,0,0.28)] backdrop-blur sm:p-9"
+            className="absolute right-0 top-36 w-[72%] rounded-[34px] border border-white/12 bg-[#111111] p-7 text-white shadow-[0_28px_90px_rgba(0,0,0,0.45)] sm:p-9"
           >
-            <span className="font-display text-7xl font-black text-acid/70">02</span>
+            <span className="font-display text-7xl font-black text-acid">02</span>
             <p className="mt-10 font-display text-4xl font-black leading-none sm:text-5xl">
               Her ekran bir satış konuşmasıdır.
             </p>
-            <p className="mt-5 text-base font-semibold leading-7 text-white/62">
+            <p className="mt-5 text-base font-semibold leading-7 text-white/68">
               Süslemek yerine hedefe götüren arayüzler kurarım: net mesaj, güçlü
               kontrast, kolay aksiyon.
             </p>
