@@ -1017,7 +1017,7 @@ function Pricing() {
                   </span>
                 ))}
               </div>
-              <ul className="mt-4 grid gap-2 text-sm font-semibold">
+              <ul className="mb-5 mt-4 grid gap-2 text-sm font-semibold">
                 {track.features.slice(0, 4).map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
                     <span
