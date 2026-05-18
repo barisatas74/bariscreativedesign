@@ -73,8 +73,8 @@ const titleReveal = {
 };
 
 const navItems = [
-  ["Hizmetler", "#hizmetler"],
   ["Sektörler", "#sektorler"],
+  ["Hizmetler", "#hizmetler"],
   ["Yaklaşım", "#yaklasim"],
   ["Süreç", "#surec"],
   ["Teklif", "#teklif"],
