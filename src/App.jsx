@@ -47,6 +47,7 @@ const SCROLL_OFFSET = 80;
 const SECTION_SCROLL_ADJUST = {
   "#yaklasim": 56,
   "#surec": 56,
+  "#teklif": 96,
 };
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -949,7 +950,7 @@ function Pricing() {
   }
 
   return (
-    <section id="teklif" className="relative overflow-hidden bg-ink py-20 text-white scroll-mt-20 sm:py-24">
+    <section id="teklif" className="relative overflow-hidden bg-ink pb-20 pt-16 text-white scroll-mt-20 sm:pb-24 sm:pt-[4.5rem]">
       <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-12 h-96 w-[36rem]" />
       <div className="ambient-cloud pointer-events-none absolute -right-40 bottom-12 hidden h-96 w-[40rem] md:block" />
 
@@ -962,7 +963,7 @@ function Pricing() {
           className="max-w-3xl"
         >
           <SectionLabel tone="light">Teklif & Uygun Çözüm</SectionLabel>
-          <h2 className="font-display text-[clamp(2rem,5vw,3.8rem)] font-black leading-[1.02]">
+          <h2 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-black leading-[1.02]">
             Rakamdan önce ihtiyacı netleştirelim.
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
@@ -976,7 +977,7 @@ function Pricing() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={stagger}
-          className="mt-10 grid gap-5 lg:grid-cols-3"
+          className="mt-8 grid gap-5 lg:grid-cols-3"
         >
           {solutionTracks.map((track) => (
             <motion.article
