@@ -888,7 +888,7 @@ function Process() {
             <motion.div
               key={title}
               variants={fadeUp}
-              className="group relative overflow-hidden rounded-[32px] border border-ink/10 bg-white/70 p-6 shadow-[0_24px_70px_rgba(5,5,5,0.08)] backdrop-blur transition duration-500 hover:-translate-y-1 hover:bg-ink hover:text-white sm:p-7"
+              className="group relative overflow-hidden rounded-[32px] border border-ink/10 bg-white/78 p-6 shadow-[0_24px_70px_rgba(5,5,5,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-ink/20 hover:bg-white hover:shadow-[0_30px_90px_rgba(5,5,5,0.12)] sm:p-7"
             >
               <div
                 className={`absolute right-0 top-0 h-24 w-24 rounded-bl-[36px] ${
@@ -902,15 +902,15 @@ function Process() {
                 }`}
               />
               <div className="relative flex items-start justify-between gap-5">
-                <span className="font-display text-6xl font-black leading-none text-ink/14 transition group-hover:text-white/14">
+                <span className="font-display text-6xl font-black leading-none text-ink/14 transition duration-300 group-hover:text-ink/20">
                   {number}
                 </span>
-                <span className="mt-2 h-3 w-3 rounded-full bg-ink transition group-hover:bg-acid" />
+                <span className="mt-2 h-3 w-3 rounded-full bg-ink transition duration-300 group-hover:bg-acid" />
               </div>
               <h3 className="relative mt-10 font-display text-3xl font-black leading-none sm:text-4xl">
                 {title}
               </h3>
-              <p className="relative mt-4 text-base font-semibold leading-7 text-ink/62 transition group-hover:text-white/66">
+              <p className="relative mt-4 text-base font-semibold leading-7 text-ink/62 transition duration-300 group-hover:text-ink/72">
                 {text}
               </p>
             </motion.div>
