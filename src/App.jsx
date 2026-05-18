@@ -959,7 +959,7 @@ function Pricing() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.35 }}
           variants={fadeUp}
-          className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+          className="grid gap-6 lg:grid-cols-[1fr_0.62fr] lg:items-end lg:gap-14"
         >
           <div className="max-w-3xl">
             <SectionLabel tone="light">Teklif & Uygun Çözüm</SectionLabel>
@@ -967,7 +967,7 @@ function Pricing() {
               Çözümünü seç, kapsamı birlikte netleştirelim.
             </h2>
           </div>
-          <p className="max-w-md text-sm font-semibold leading-6 text-white/62 sm:text-base sm:leading-7">
+          <p className="rounded-[22px] border border-white/10 bg-white/[0.045] p-5 text-sm font-semibold leading-6 text-white/68 sm:text-base sm:leading-7">
             Rakamdan önce ihtiyacı konuşuruz. Sana en yakın başlığı seç, formda kapsamı birlikte netleştirelim.
           </p>
         </motion.div>
