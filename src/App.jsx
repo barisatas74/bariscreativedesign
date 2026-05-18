@@ -44,6 +44,9 @@ const WHATSAPP_MESSAGE =
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const SCROLL_OFFSET = 80;
+const SECTION_SCROLL_ADJUST = {
+  "#yaklasim": 120,
+};
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const fadeUp = {
@@ -141,7 +144,8 @@ function getSectionTop(href) {
   if (!target) return null;
   const flushSections = new Set(["#top", "#iletisim"]);
   const offset = flushSections.has(href) ? 0 : SCROLL_OFFSET;
-  return Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset);
+  const adjustment = SECTION_SCROLL_ADJUST[href] || 0;
+  return Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset + adjustment);
 }
 
 function useInitialHashScroll() {
