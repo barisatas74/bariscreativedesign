@@ -888,10 +888,10 @@ function Process() {
             <motion.div
               key={title}
               variants={fadeUp}
-              className="group relative overflow-hidden rounded-[32px] border border-ink/10 bg-white/78 p-6 shadow-[0_24px_70px_rgba(5,5,5,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-ink/20 hover:bg-white hover:shadow-[0_30px_90px_rgba(5,5,5,0.12)] sm:p-7"
+              className="group relative overflow-hidden rounded-[32px] border border-ink/10 bg-white/78 p-6 shadow-[0_24px_70px_rgba(5,5,5,0.08)] backdrop-blur transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-white/15 hover:shadow-[0_30px_90px_rgba(5,5,5,0.2)] sm:p-7"
             >
               <div
-                className={`absolute right-0 top-0 h-24 w-24 rounded-bl-[36px] ${
+                className={`absolute right-0 top-0 z-0 h-24 w-24 rounded-bl-[36px] ${
                   index === 0
                     ? "bg-acid"
                     : index === 1
@@ -901,16 +901,18 @@ function Process() {
                         : "bg-violet"
                 }`}
               />
-              <div className="relative flex items-start justify-between gap-5">
-                <span className="font-display text-6xl font-black leading-none text-ink/14 transition duration-300 group-hover:text-ink/20">
+              <span className="pointer-events-none absolute inset-0 z-[1] bg-ink opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" />
+              <span className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-px bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="relative z-10 flex items-start justify-between gap-5">
+                <span className="font-display text-6xl font-black leading-none text-ink/14 transition-colors duration-300 group-hover:text-white/14">
                   {number}
                 </span>
-                <span className="mt-2 h-3 w-3 rounded-full bg-ink transition duration-300 group-hover:bg-acid" />
+                <span className="mt-2 h-3 w-3 rounded-full bg-ink transition-colors duration-300 group-hover:bg-acid" />
               </div>
-              <h3 className="relative mt-10 font-display text-3xl font-black leading-none sm:text-4xl">
+              <h3 className="relative z-10 mt-10 font-display text-3xl font-black leading-none text-ink transition-colors duration-300 group-hover:text-white sm:text-4xl">
                 {title}
               </h3>
-              <p className="relative mt-4 text-base font-semibold leading-7 text-ink/62 transition duration-300 group-hover:text-ink/72">
+              <p className="relative z-10 mt-4 text-base font-semibold leading-7 text-ink/62 transition-colors duration-300 group-hover:text-white/66">
                 {text}
               </p>
             </motion.div>
