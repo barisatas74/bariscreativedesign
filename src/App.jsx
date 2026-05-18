@@ -912,7 +912,7 @@ function Process() {
               <h3 className="relative z-10 mt-10 font-display text-3xl font-black leading-none text-ink transition-colors duration-300 group-hover:text-white sm:text-4xl">
                 {title}
               </h3>
-              <p className="relative z-10 mt-4 text-base font-semibold leading-7 text-ink/62 transition-colors duration-300 group-hover:text-white/78">
+              <p className="relative z-10 mt-4 text-base font-semibold leading-7 text-ink/62 transition-colors duration-300 group-hover:text-acid">
                 {text}
               </p>
             </motion.div>
