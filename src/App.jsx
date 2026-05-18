@@ -372,11 +372,7 @@ function Header() {
               key={label}
               href={href}
               onClick={(event) => scrollToSection(event, href)}
-              className={`text-sm font-semibold transition hover:text-white ${
-                href === "#sektorler"
-                  ? "rounded-full border border-acid/30 px-3 py-2 text-acid hover:border-acid hover:bg-acid hover:text-ink"
-                  : "text-white/70"
-              }`}
+              className="text-sm font-semibold text-white/70 transition hover:text-white"
             >
               {label}
             </a>
