@@ -1,5 +1,5 @@
-/* BarışCreativeDesign — Basit cache-first service worker */
-const VERSION = "bcd-v1";
+/* BarışCreativeDesign — Basit network-first/service-worker cache */
+const VERSION = "bcd-v2026-05-10-1";
 const PRECACHE = [
   "/",
   "/logo.png",
@@ -33,8 +33,10 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(VERSION).then((cache) => cache.put(request, copy));
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(VERSION).then((cache) => cache.put(request, copy));
+          }
           return response;
         })
         .catch(() => caches.match(request).then((cached) => cached || caches.match("/")))
@@ -47,13 +49,15 @@ self.addEventListener("fetch", (event) => {
     caches.match(request).then((cached) => {
       return (
         cached ||
-        fetch(request).then((response) => {
-          if (response && response.status === 200 && response.type === "basic") {
-            const copy = response.clone();
-            caches.open(VERSION).then((cache) => cache.put(request, copy));
-          }
-          return response;
-        })
+        fetch(request)
+          .then((response) => {
+            if (response && response.status === 200 && response.type === "basic") {
+              const copy = response.clone();
+              caches.open(VERSION).then((cache) => cache.put(request, copy));
+            }
+            return response;
+          })
+          .catch(() => new Response("", { status: 504, statusText: "Offline" }))
       );
     })
   );

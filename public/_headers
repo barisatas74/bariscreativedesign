@@ -1,0 +1,14 @@
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'sha256-I54Oh3qaeeA3FSGWzbnazT3oJWTSDCRRWl5aqh0JZ8M=' 'sha256-Gikw6hQ4/niGefnLOeR487gQ3qMmjQHsSIbLJTxmc/U=' 'sha256-LcrquLPXRfg1bXMectfL7LlAS4OZRgNO413/HbiRcwg=' 'sha256-TVjp3mQJVzavURQZyaeqfU3sg4KumPjnf9iql+II1A0='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://api.web3forms.com; worker-src 'self'; manifest-src 'self'; form-action 'self' mailto: https://api.web3forms.com; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), fullscreen=(self)
+  Cross-Origin-Opener-Policy: same-origin
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate

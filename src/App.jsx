@@ -23,9 +23,9 @@ import {
 const WHATSAPP_NUMBER = "905345255865";
 const CONTACT_EMAIL = "bariscreativedesign@gmail.com";
 const CONTACT_PHONE = "+90 534 525 58 65";
-// Web3Forms access key — https://web3forms.com (ücretsiz, kayıt gerekmez)
+// Web3Forms access key — .env.local içinde VITE_WEB3FORMS_ACCESS_KEY olarak tanımlanır.
 // Boş bırakılırsa form mailto fallback'ine düşer.
-const WEB3FORMS_ACCESS_KEY = "";
+const WEB3FORMS_ACCESS_KEY = (import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "").trim();
 const SOCIAL_LINKS = {
   instagram: "https://www.instagram.com/bariscreativedesign/?hl=tr",
   linkedin: "https://www.linkedin.com/in/bar%C4%B1%C5%9F-ata%C5%9F-733a75356/",
@@ -36,6 +36,7 @@ const WHATSAPP_MESSAGE =
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const SCROLL_OFFSET = 80;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
@@ -67,7 +68,7 @@ const navItems = [
   ["Hizmetler", "#hizmetler"],
   ["Yaklaşım", "#yaklasim"],
   ["Süreç", "#surec"],
-  ["Fiyatlandırma", "#fiyatlandirma"],
+  ["Teklif", "#teklif"],
   ["SSS", "#sss"],
   ["İletişim", "#iletisim"],
 ];
@@ -112,17 +113,37 @@ function useMagneticButtons() {
 function scrollToSection(event, href, afterScroll) {
   if (!href.startsWith("#")) return;
 
-  const target = document.querySelector(href);
-  if (!target) return;
+  const top = getSectionTop(href);
+  if (top === null) return;
 
   event.preventDefault();
-  const flushSections = new Set(["#top", "#iletisim"]);
-  const offset = flushSections.has(href) ? 0 : SCROLL_OFFSET;
-  const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset);
-
   window.scrollTo({ top, behavior: "smooth" });
   window.history.pushState(null, "", href);
   afterScroll?.();
+}
+
+function getSectionTop(href) {
+  let target;
+  try {
+    target = document.querySelector(href);
+  } catch {
+    return null;
+  }
+  if (!target) return null;
+  const flushSections = new Set(["#top", "#iletisim"]);
+  const offset = flushSections.has(href) ? 0 : SCROLL_OFFSET;
+  return Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset);
+}
+
+function useInitialHashScroll() {
+  useEffect(() => {
+    if (!window.location.hash) return;
+    const frame = requestAnimationFrame(() => {
+      const top = getSectionTop(window.location.hash);
+      if (top !== null) window.scrollTo({ top, behavior: "auto" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 }
 
 const services = [
@@ -197,54 +218,54 @@ const guarantees = [
     text: "Her pakette belirli sayıda revizyon turu vardır. Tasarım yönü onaylanana kadar üzerinde çalışırız.",
   },
   {
-    title: "Şeffaf fiyat",
-    text: "Sürpriz ek maliyet yok. Kapsam değişirse önce sana söyler, onayını beklerim.",
+    title: "Şeffaf teklif",
+    text: "Kapsamı birlikte netleştirir, sürpriz maliyet çıkarmadan önce onayını alırım.",
   },
 ];
 
-const pricingPlans = [
+const solutionTracks = [
   {
-    name: "Başlangıç",
-    price: "₺19.900",
-    desc: "Küçük işletmeler ve kişisel markalar için hızlı yayına hazır site.",
+    name: "Tek Sayfalık Site",
+    eyebrow: "Hızlı başlangıç",
+    desc: "Yeni görünüm isteyen küçük işletmeler, kişisel markalar ve kampanya sayfaları için sade ama güçlü başlangıç.",
+    bestFor: ["Küçük işletme", "Kişisel marka", "Hızlı yayına çıkış"],
     features: [
-      "Tek sayfalık modern tasarım",
-      "Mobil uyumlu",
-      "WhatsApp & iletişim entegrasyonu",
-      "Temel SEO ayarları",
-      "1 revizyon turu",
+      "Net mesaj hiyerarşisi",
+      "Mobil uyumlu modern arayüz",
+      "WhatsApp ve e-posta aksiyonları",
+      "Temel teknik SEO hazırlığı",
     ],
-    cta: "Paketi seç",
+    cta: "Bu çözümü konuşalım",
     highlighted: false,
   },
   {
-    name: "Pro",
-    price: "₺39.900",
-    desc: "Büyüyen markalar için çok bölümlü, premium hisli tam web deneyimi.",
+    name: "Kurumsal Web Deneyimi",
+    eyebrow: "En dengeli",
+    desc: "Markasını daha profesyonel göstermek, güven vermek ve daha güçlü teklif almak isteyen işletmeler için.",
+    bestFor: ["Kurumsal görünüm", "Çok bölümlü yapı", "Güven odaklı sunum"],
     features: [
-      "Çok sayfalı özel tasarım",
-      "Animasyon ve mikro etkileşimler",
-      "Gelişmiş SEO + sitemap",
-      "Blog veya portföy modülü",
-      "3 revizyon turu",
-      "30 gün destek",
+      "Özel tasarım yönü",
+      "Hizmet ve süreç anlatımı",
+      "Mikro etkileşimler",
+      "SEO, sitemap ve sosyal paylaşım hazırlığı",
+      "Yayına hazırlık kontrolü",
     ],
-    cta: "En popüler",
+    cta: "Ön görüşme iste",
     highlighted: true,
   },
   {
-    name: "Kurumsal",
-    price: "Teklif",
-    desc: "E-ticaret, AI sistemler ve otomasyon dahil özel kapsam projeler.",
+    name: "Özel Sistem & Otomasyon",
+    eyebrow: "Kapsama göre",
+    desc: "E-ticaret, panel, yapay zeka, otomasyon veya özel iş akışı olan projelerde kapsamı birlikte çıkarırız.",
+    bestFor: ["E-ticaret", "AI / otomasyon", "Panel ve özel modül"],
     features: [
-      "Sınırsız sayfa & özel modüller",
-      "E-ticaret veya panel entegrasyonu",
-      "AI / otomasyon iş akışları",
-      "Performans & güvenlik optimizasyonu",
-      "Özel revizyon paketi",
-      "90 gün destek",
+      "İhtiyaç analizi",
+      "Modül ve entegrasyon planı",
+      "Ölçeklenebilir teknik yapı önerisi",
+      "Güvenlik ve performans yaklaşımı",
+      "Aşamalandırılmış proje planı",
     ],
-    cta: "İletişime geç",
+    cta: "Kapsamı çıkaralım",
     highlighted: false,
   },
 ];
@@ -271,8 +292,8 @@ const faqs = [
     a: "Tüm projeler temel teknik SEO (meta etiketler, semantik HTML, sitemap, hız optimizasyonu) ile teslim edilir. Pro ve Kurumsal pakette gelişmiş SEO ve schema markup da dahildir.",
   },
   {
-    q: "Ödeme nasıl alıyorsun?",
-    a: "Genelde proje başında %50, teslimde %50 olacak şekilde iki taksit. Kurumsal projelerde aşamalı ödeme planı oluşturuyoruz. EFT/havale ile çalışıyorum.",
+    q: "Fiyat nasıl netleşiyor?",
+    a: "Önce ihtiyacı, sayfa yapısını, içerik durumunu ve özel istekleri konuşuyoruz. Sonrasında kapsamı net olan, sürpriz maliyet çıkarmayan samimi bir teklif paylaşıyorum.",
   },
 ];
 
@@ -392,7 +413,7 @@ function Hero() {
           </motion.p>
           <motion.h1
             variants={stagger}
-            className="font-display text-[clamp(2.4rem,9vw,4rem)] font-black lowercase leading-[0.9] tracking-normal sm:text-[clamp(3.2rem,7vw,7rem)] sm:leading-[0.88]"
+            className="max-w-full break-words font-display text-[clamp(1.85rem,8.7vw,4rem)] font-black lowercase leading-[0.94] tracking-normal sm:text-[clamp(3.2rem,7vw,7rem)] sm:leading-[0.88]"
           >
             {heroTitleLines.map((line) => (
               <span key={line} className="block overflow-hidden pb-[0.06em]">
@@ -818,66 +839,24 @@ function Process() {
   );
 }
 
-const QUOTE_BASES = [
-  { id: "landing", label: "Tek Sayfalık Site", price: 19900, defaultPages: 1, includesPages: 1 },
-  { id: "multi", label: "Çok Sayfalı Kurumsal", price: 39900, defaultPages: 5, includesPages: 5 },
-  { id: "ecommerce", label: "E-Ticaret", price: 59900, defaultPages: 8, includesPages: 8 },
-  { id: "custom", label: "Özel Sistem / AI", price: 89900, defaultPages: 6, includesPages: 6 },
-];
-
-const QUOTE_FEATURES = [
-  { id: "animations", label: "Gelişmiş animasyonlar", price: 4000 },
-  { id: "blog", label: "Blog / haber modülü", price: 5000 },
-  { id: "multilingual", label: "Çoklu dil (TR/EN)", price: 6000 },
-  { id: "ai", label: "AI entegrasyonu", price: 12000 },
-  { id: "payment", label: "Ödeme entegrasyonu", price: 8000 },
-  { id: "cms", label: "Özel CMS / panel", price: 10000 },
-];
-
-const PER_EXTRA_PAGE = 3000;
-
-function formatCurrency(value) {
-  try {
-    return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency: "TRY",
-      maximumFractionDigits: 0,
-    }).format(value);
-  } catch {
-    return `₺${value.toLocaleString("tr-TR")}`;
-  }
-}
-
 function Pricing() {
-  const [baseId, setBaseId] = useState("multi");
-  const [pages, setPages] = useState(5);
-  const [features, setFeatures] = useState([]);
-
-  const base = QUOTE_BASES.find((b) => b.id === baseId) || QUOTE_BASES[0];
-
-  useEffect(() => {
-    setPages(base.defaultPages);
-  }, [baseId, base.defaultPages]);
-
-  const extraPages = Math.max(0, pages - base.includesPages);
-  const featuresTotal = features.reduce((sum, id) => {
-    const f = QUOTE_FEATURES.find((x) => x.id === id);
-    return sum + (f?.price || 0);
-  }, 0);
-  const total = base.price + extraPages * PER_EXTRA_PAGE + featuresTotal;
-
-  function toggleFeature(id) {
-    setFeatures((current) =>
-      current.includes(id) ? current.filter((x) => x !== id) : [...current, id],
-    );
-  }
-
-  function goToContactWithPlan(planName) {
+  function goToContactWithSolution(track) {
+    const summary = [
+      `İlgilendiğim çözüm: ${track.name}`,
+      `Kullanım alanı: ${track.bestFor.join(", ")}`,
+      "Proje kapsamını birlikte netleştirmek istiyorum.",
+    ].join("\n");
+    try {
+      sessionStorage.setItem("bcd_quote_summary", summary);
+    } catch {
+      /* ignore */
+    }
     const url = new URL(window.location.href);
-    url.searchParams.set("plan", planName);
+    url.searchParams.set("plan", track.name);
     url.hash = "iletisim";
     window.history.pushState(null, "", url);
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    window.dispatchEvent(new Event("popstate"));
+    window.dispatchEvent(new CustomEvent("bcd:quote-summary", { detail: { summary } }));
     const target = document.querySelector("#iletisim");
     if (target) {
       const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY);
@@ -885,30 +864,8 @@ function Pricing() {
     }
   }
 
-  function goToContactWithQuote(event) {
-    event.preventDefault();
-    const summary = [
-      `Tahmini paket: ${base.label}`,
-      `Sayfa sayısı: ${pages}`,
-      features.length > 0
-        ? `Eklenen özellikler: ${features
-            .map((id) => QUOTE_FEATURES.find((f) => f.id === id)?.label)
-            .filter(Boolean)
-            .join(", ")}`
-        : "Eklenen özellik yok",
-      `Tahmini bütçe: ${formatCurrency(total)}`,
-    ].join("\n");
-    try {
-      sessionStorage.setItem("bcd_quote_summary", summary);
-    } catch {
-      /* ignore */
-    }
-    window.dispatchEvent(new CustomEvent("bcd:quote-summary", { detail: { summary } }));
-    goToContactWithPlan(base.label);
-  }
-
   return (
-    <section id="fiyatlandirma" className="relative overflow-hidden bg-ink py-20 text-white scroll-mt-20 sm:py-24">
+    <section id="teklif" className="relative overflow-hidden bg-ink py-20 text-white scroll-mt-20 sm:py-24">
       <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-12 h-96 w-[36rem]" />
       <div className="ambient-cloud pointer-events-none absolute -right-40 bottom-12 hidden h-96 w-[40rem] md:block" />
 
@@ -920,13 +877,13 @@ function Pricing() {
           variants={fadeUp}
           className="max-w-3xl"
         >
-          <SectionLabel tone="light">Fiyatlandırma & Bütçe</SectionLabel>
+          <SectionLabel tone="light">Teklif & Uygun Çözüm</SectionLabel>
           <h2 className="font-display text-[clamp(2rem,5vw,3.8rem)] font-black leading-[1.02]">
-            Şeffaf paketler. Şeffaf hesap.
+            Rakamdan önce ihtiyacı netleştirelim.
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
-            Hazır paketlerden birini seç ya da aşağıdaki hesaplayıcı ile kendi
-            bütçeni özelleştir. Net fiyat her iki yolda da brief sonrası paylaşılır.
+            Her projenin kapsamı farklı. Bu yüzden önce markanı, hedefini ve
+            önceliğini anlarım; sonra sana net, samimi ve sürprizsiz bir teklif sunarım.
           </p>
         </motion.div>
 
@@ -937,41 +894,53 @@ function Pricing() {
           variants={stagger}
           className="mt-10 grid gap-5 lg:grid-cols-3"
         >
-          {pricingPlans.map((plan) => (
+          {solutionTracks.map((track) => (
             <motion.article
-              key={plan.name}
+              key={track.name}
               variants={fadeUp}
               className={`group relative flex flex-col overflow-hidden rounded-[28px] p-7 transition duration-500 hover:-translate-y-1 sm:p-8 ${
-                plan.highlighted
+                track.highlighted
                   ? "bg-acid text-ink shadow-[0_30px_90px_rgba(215,255,54,0.28)]"
                   : "border border-white/10 bg-white/[0.04] text-white hover:border-white/25"
               }`}
             >
-              {plan.highlighted && (
+              {track.highlighted && (
                 <span className="absolute right-6 top-6 rounded-full bg-ink px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-acid">
-                  En popüler
+                  En dengeli
                 </span>
               )}
-              <p className={`text-xs font-black uppercase tracking-[0.22em] ${plan.highlighted ? "text-ink/65" : "text-white/45"}`}>
-                {plan.name}
+              <p className={`text-xs font-black uppercase tracking-[0.22em] ${track.highlighted ? "text-ink/65" : "text-white/45"}`}>
+                {track.eyebrow}
               </p>
-              <p className="mt-4 font-display text-5xl font-black leading-none sm:text-6xl">
-                {plan.price}
+              <h3 className="mt-4 font-display text-3xl font-black leading-none sm:text-4xl">
+                {track.name}
+              </h3>
+              <p className={`mt-4 text-sm font-semibold leading-6 ${track.highlighted ? "text-ink/72" : "text-white/65"}`}>
+                {track.desc}
               </p>
-              <p className={`mt-3 text-sm font-semibold leading-6 ${plan.highlighted ? "text-ink/72" : "text-white/65"}`}>
-                {plan.desc}
-              </p>
-              <ul className="mt-6 space-y-3 text-sm font-semibold">
-                {plan.features.map((feature) => (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {track.bestFor.map((item) => (
+                  <span
+                    key={item}
+                    className={`rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] ${
+                      track.highlighted ? "bg-ink/10 text-ink/70" : "bg-white/8 text-white/55"
+                    }`}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <ul className="mt-6 flex-1 space-y-3 text-sm font-semibold">
+                {track.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
                     <span
                       className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                        plan.highlighted ? "bg-ink text-acid" : "bg-acid text-ink"
+                        track.highlighted ? "bg-ink text-acid" : "bg-acid text-ink"
                       }`}
                     >
                       <Check className="h-3 w-3" strokeWidth={3} />
                     </span>
-                    <span className={plan.highlighted ? "text-ink/85" : "text-white/80"}>
+                    <span className={track.highlighted ? "text-ink/85" : "text-white/80"}>
                       {feature}
                     </span>
                   </li>
@@ -979,14 +948,14 @@ function Pricing() {
               </ul>
               <button
                 type="button"
-                onClick={() => goToContactWithPlan(plan.name)}
+                onClick={() => goToContactWithSolution(track)}
                 className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-black transition ${
-                  plan.highlighted
+                  track.highlighted
                     ? "bg-ink text-white hover:bg-white hover:text-ink"
                     : "border border-white/20 hover:border-white hover:bg-white hover:text-ink"
                 }`}
               >
-                {plan.cta}
+                {track.cta}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </motion.article>
@@ -994,211 +963,53 @@ function Pricing() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mt-16 flex items-center gap-5 sm:mt-20"
-        >
-          <span className="h-px flex-1 bg-white/12" />
-          <span className="font-display text-xs font-black uppercase tracking-[0.24em] text-white/55">
-            ya da kendi bütçeni hesapla
-          </span>
-          <span className="h-px flex-1 bg-white/12" />
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.35 }}
-          variants={fadeUp}
-          className="mt-8 max-w-2xl"
-        >
-          <h3 className="font-display text-[clamp(1.6rem,3.5vw,2.6rem)] font-black leading-[1.05]">
-            Aklındaki proje ne kadar tutar?
-          </h3>
-          <p className="mt-3 text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
-            Proje türü, sayfa sayısı ve eklemek istediklerini seç — anlık tahmini bütçeyi gör.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 grid gap-5 lg:grid-cols-[1.4fr_1fr]"
+          className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur sm:p-8"
         >
-          <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur sm:p-8">
-            <fieldset>
-              <legend className="font-display text-xs font-black uppercase tracking-[0.22em] text-white/55">
-                Proje türü
-              </legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {QUOTE_BASES.map((b) => {
-                  const isActive = baseId === b.id;
-                  return (
-                    <label
-                      key={b.id}
-                      className={`flex cursor-pointer items-start justify-between gap-3 rounded-2xl border p-4 transition ${
-                        isActive
-                          ? "border-acid bg-acid text-ink"
-                          : "border-white/10 bg-white/[0.03] text-white hover:border-white/30"
-                      }`}
-                    >
-                      <div>
-                        <p className="font-display text-sm font-black sm:text-base">
-                          {b.label}
-                        </p>
-                        <p className={`mt-1 text-xs font-semibold ${isActive ? "text-ink/70" : "text-white/55"}`}>
-                          {b.includesPages} sayfa dahil • {formatCurrency(b.price)}'den başlar
-                        </p>
-                      </div>
-                      <input
-                        type="radio"
-                        name="quote-base"
-                        value={b.id}
-                        checked={isActive}
-                        onChange={() => setBaseId(b.id)}
-                        className="sr-only"
-                      />
-                      <span
-                        className={`mt-1 h-5 w-5 shrink-0 rounded-full border-2 transition ${
-                          isActive ? "border-ink bg-ink" : "border-white/40"
-                        }`}
-                        aria-hidden
-                      />
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-
-            <div className="mt-6">
-              <div className="flex items-end justify-between">
-                <label htmlFor="quote-pages" className="font-display text-xs font-black uppercase tracking-[0.22em] text-white/55">
-                  Sayfa sayısı
-                </label>
-                <span className="font-display text-2xl font-black tabular-nums">
-                  {pages}
-                </span>
-              </div>
-              <input
-                id="quote-pages"
-                type="range"
-                min={1}
-                max={20}
-                value={pages}
-                onChange={(e) => setPages(Number(e.target.value))}
-                className="mt-3 w-full accent-acid"
-              />
-              <p className="mt-2 text-xs text-white/55">
-                Pakete dahil: {base.includesPages} sayfa
-                {extraPages > 0 && ` • Ek: ${extraPages} × ${formatCurrency(PER_EXTRA_PAGE)}`}
+          <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+            <div>
+              <p className="font-display text-xs font-black uppercase tracking-[0.22em] text-acid">
+                Nasıl ilerliyoruz?
+              </p>
+              <h3 className="mt-3 font-display text-[clamp(1.6rem,3vw,2.6rem)] font-black leading-[1.05]">
+                Önce konuşuruz, sonra netleştiririz.
+              </h3>
+              <p className="mt-4 text-sm font-semibold leading-6 text-white/62 sm:text-base sm:leading-7">
+                Kısa bir ön görüşmede hedefini, sayfa ihtiyacını, içerik durumunu ve
+                teslim beklentini anlarım. Sonrasında sana sadece ihtiyacın olan kapsamı öneririm.
               </p>
             </div>
-
-            <fieldset className="mt-6">
-              <legend className="font-display text-xs font-black uppercase tracking-[0.22em] text-white/55">
-                Eklemek istediklerin
-              </legend>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {QUOTE_FEATURES.map((f) => {
-                  const isActive = features.includes(f.id);
-                  return (
-                    <label
-                      key={f.id}
-                      className={`flex cursor-pointer items-center justify-between gap-3 rounded-2xl border p-3 text-sm transition ${
-                        isActive
-                          ? "border-acid bg-acid text-ink"
-                          : "border-white/10 bg-white/[0.03] text-white hover:border-white/30"
-                      }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <span
-                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${
-                            isActive ? "border-ink bg-ink" : "border-white/40"
-                          }`}
-                          aria-hidden
-                        >
-                          {isActive && <Check className="h-3 w-3 text-acid" strokeWidth={3} />}
-                        </span>
-                        <span className="font-semibold">{f.label}</span>
-                      </span>
-                      <span
-                        className={`text-xs font-black tabular-nums ${
-                          isActive ? "text-ink/80" : "text-white/55"
-                        }`}
-                      >
-                        +{formatCurrency(f.price)}
-                      </span>
-                      <input
-                        type="checkbox"
-                        checked={isActive}
-                        onChange={() => toggleFeature(f.id)}
-                        className="sr-only"
-                      />
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-          </div>
-
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-[28px] bg-acid p-6 text-ink shadow-[0_30px_90px_rgba(215,255,54,0.28)] sm:p-8">
-              <p className="font-display text-xs font-black uppercase tracking-[0.22em] text-ink/70">
-                Tahmini bütçe
-              </p>
-              <p className="mt-3 font-display text-4xl font-black leading-none tabular-nums sm:text-5xl">
-                {formatCurrency(total)}
-              </p>
-              <p className="mt-2 text-xs font-semibold text-ink/65">+ KDV</p>
-
-              <div className="mt-6 space-y-2 border-t border-ink/15 pt-5 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-ink/72">{base.label}</span>
-                  <span className="font-bold tabular-nums">{formatCurrency(base.price)}</span>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                ["01", "Kısa keşif", "İşini ve beklentini anlarız."],
+                ["02", "Net kapsam", "Gereksiz işi ayıklarız."],
+                ["03", "Samimi teklif", "Sürprizsiz bir yol haritası çıkar."],
+              ].map(([number, title, text]) => (
+                <div key={title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <p className="font-display text-3xl font-black text-acid">{number}</p>
+                  <p className="mt-3 font-display text-base font-black">{title}</p>
+                  <p className="mt-2 text-xs font-semibold leading-5 text-white/55">{text}</p>
                 </div>
-                {extraPages > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-ink/72">Ek {extraPages} sayfa</span>
-                    <span className="font-bold tabular-nums">
-                      {formatCurrency(extraPages * PER_EXTRA_PAGE)}
-                    </span>
-                  </div>
-                )}
-                {features.map((id) => {
-                  const f = QUOTE_FEATURES.find((x) => x.id === id);
-                  if (!f) return null;
-                  return (
-                    <div key={id} className="flex items-center justify-between">
-                      <span className="text-ink/72">{f.label}</span>
-                      <span className="font-bold tabular-nums">{formatCurrency(f.price)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <button
-                type="button"
-                onClick={goToContactWithQuote}
-                data-magnetic="0.18"
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-black text-white transition will-change-transform hover:bg-white hover:text-ink"
-              >
-                Bu seçimle teklif iste
-                <ArrowRight className="h-4 w-4" />
-              </button>
-              <p className="mt-3 text-center text-[11px] font-semibold text-ink/65">
-                Bu rakam yön gösterici — net fiyat brief sonrası belirlenir.
-              </p>
+              ))}
             </div>
+          </div>
+          <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm font-semibold leading-6 text-white/62">
+              Kararsızsan direkt yaz; hangi çözümün sana uyduğunu birlikte seçeriz.
+            </p>
+            <a
+              href="#iletisim"
+              onClick={(event) => scrollToSection(event, "#iletisim")}
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-acid px-6 py-3 text-sm font-black text-ink transition hover:bg-white"
+            >
+              Projeni anlat
+              <ArrowRight className="h-4 w-4" />
+            </a>
           </div>
         </motion.div>
-
-        <p className="mt-12 text-center text-xs font-semibold text-white/45">
-          Fiyatlar KDV hariçtir. Ödeme planı: %50 başlangıç, %50 teslim.
-        </p>
       </div>
     </section>
   );
@@ -1370,7 +1181,7 @@ function FAQ() {
 }
 
 function ContactForm() {
-  // status: "idle" | "submitting" | "sent" | "error"
+  // status: "idle" | "submitting" | "sent" | "email-client" | "error"
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -1412,12 +1223,32 @@ function ContactForm() {
     const name = String(formData.get("name") || "").trim();
     const email = String(formData.get("email") || "").trim();
     const phone = String(formData.get("phone") || "").trim();
+    const phoneDigits = phone.replace(/\D/g, "");
     const message = String(formData.get("message") || "").trim();
     const plan = String(formData.get("plan") || "").trim();
+    const botcheck = String(formData.get("botcheck") || "").trim();
 
-    if (!name || !email || !phone || !message) {
+    if (botcheck) {
+      setStatus("error");
+      setErrorMessage("Gönderim doğrulanamadı. Lütfen sayfayı yenileyip tekrar dene.");
+      return;
+    }
+
+    if (!name || !email || !phoneDigits || !message) {
       setStatus("error");
       setErrorMessage("Lütfen tüm alanları doldur.");
+      return;
+    }
+
+    if (!EMAIL_PATTERN.test(email)) {
+      setStatus("error");
+      setErrorMessage("Lütfen geçerli bir e-posta adresi gir.");
+      return;
+    }
+
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      setStatus("error");
+      setErrorMessage("Lütfen telefon numaranı 10-15 rakam aralığında gir.");
       return;
     }
 
@@ -1437,9 +1268,10 @@ function ContactForm() {
           replyto: email,
           name,
           email,
-          phone,
+          phone: phoneDigits,
           plan: plan || "Belirtilmedi",
           message,
+          botcheck,
         };
         const response = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
@@ -1468,12 +1300,13 @@ function ContactForm() {
       const subject = plan
         ? `Yeni proje talebi — ${name} (${plan} paket)`
         : `Yeni proje talebi — ${name}`;
-      const body = `Ad Soyad: ${name}\nE-posta: ${email}\nTelefon: ${phone}${plan ? `\nPaket: ${plan}` : ""}\n\nMesaj:\n${message}`;
+      const body = `Ad Soyad: ${name}\nE-posta: ${email}\nTelefon: ${phoneDigits}${plan ? `\nPaket: ${plan}` : ""}\n\nMesaj:\n${message}`;
       const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.location.href = mailto;
-      setStatus("sent");
-      // mailto açılmazsa kullanıcı bilgisini koru: form'u sıfırlamadan kullanıcıya geri bildirim ver
-      setTimeout(() => setStatus("idle"), 6000);
+      setStatus("email-client");
+      setErrorMessage("");
+      // mailto gerçek gönderim değildir; kullanıcı mail uygulamasında gönderimi tamamlamalı.
+      setTimeout(() => setStatus("idle"), 8000);
     } catch (error) {
       setStatus("error");
       setErrorMessage("Beklenmeyen bir hata oluştu. WhatsApp veya e-posta ile yazabilirsin.");
@@ -1575,6 +1408,7 @@ function ContactForm() {
                 name="name"
                 type="text"
                 required
+                maxLength={80}
                 autoCapitalize="words"
                 autoComplete="name"
                 placeholder="Adın"
@@ -1599,6 +1433,7 @@ function ContactForm() {
                 name="email"
                 type="email"
                 required
+                maxLength={120}
                 autoComplete="email"
                 inputMode="email"
                 placeholder="adin@example.com"
@@ -1639,6 +1474,7 @@ function ContactForm() {
                 name="message"
                 key={quotePrefill}
                 required
+                maxLength={1200}
                 rows={quotePrefill ? 6 : 3}
                 autoComplete="off"
                 defaultValue={quotePrefill}
@@ -1646,6 +1482,14 @@ function ContactForm() {
                 className="w-full resize-none rounded-2xl border border-white/15 bg-white/[0.04] px-4 py-3.5 text-sm font-semibold text-white placeholder:text-white/35 transition focus:border-acid focus:outline-none focus:ring-2 focus:ring-acid/30"
               />
             </div>
+            <input
+              type="text"
+              name="botcheck"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
             <input type="hidden" name="plan" value={selectedPlan} />
             {selectedPlan && (
               <p className="rounded-2xl border border-acid/30 bg-acid/10 px-4 py-2.5 text-xs font-bold text-acid">
@@ -1685,6 +1529,14 @@ function ContactForm() {
                 Mesajın iletildi. En kısa sürede dönüş yapacağım.
               </p>
             )}
+            {status === "email-client" && (
+              <p
+                role="status"
+                className="rounded-2xl border border-acid/40 bg-acid/15 px-4 py-2.5 text-xs font-bold text-acid"
+              >
+                Mail uygulaman açıldı. Gönder butonuna bastığında talebin bana ulaşır.
+              </p>
+            )}
             <button
               type="submit"
               disabled={status === "submitting"}
@@ -1695,6 +1547,8 @@ function ContactForm() {
                 ? "Gönderiliyor…"
                 : status === "sent"
                   ? "Gönderildi ✓"
+                  : status === "email-client"
+                    ? "Mail hazırlandı"
                   : "Mesajı Gönder"}
               {status !== "submitting" && (
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -1720,7 +1574,7 @@ const LEGAL_DOCS = {
       },
       {
         h: "Toplanan Veriler",
-        p: "İletişim formu üzerinden ad-soyad, e-posta adresi, telefon numarası ve mesaj içeriği toplanmaktadır. Site ziyaretlerinde teknik amaçlarla IP adresi, tarayıcı bilgisi ve çerez verileri işlenmektedir.",
+        p: "İletişim formu veya doğrudan iletişim bağlantıları üzerinden ad-soyad, e-posta adresi, telefon numarası ve mesaj içeriği işlenebilir. Barındırma servisinin güvenlik kayıtları kapsamında IP adresi ve tarayıcı bilgisi gibi teknik loglar oluşabilir.",
       },
       {
         h: "İşleme Amaçları",
@@ -1728,7 +1582,7 @@ const LEGAL_DOCS = {
       },
       {
         h: "Aktarım",
-        p: "Verileriniz; barındırma, e-posta gönderimi ve form servis sağlayıcıları (örn. Web3Forms) gibi sözleşmeli iş ortaklarımız haricinde üçüncü kişilerle paylaşılmaz. Yurt dışı aktarımı KVKK md. 9 kapsamında yapılır.",
+        p: "Verileriniz; barındırma, e-posta gönderimi ve form servis sağlayıcıları (örn. Web3Forms kullanılırsa) gibi sözleşmeli iş ortaklarımız haricinde üçüncü kişilerle paylaşılmaz. Yurt dışı aktarımı ilgili mevzuat ve açık rıza/uygun güvence şartları kapsamında değerlendirilir.",
       },
       {
         h: "Saklama Süresi",
@@ -1750,7 +1604,7 @@ const LEGAL_DOCS = {
       },
       {
         h: "Veri Güvenliği",
-        p: "Kişisel verileriniz; yetkisiz erişim, kayıp ve değiştirilmeye karşı uygun teknik ve idari tedbirlerle korunur. Form gönderimleri HTTPS üzerinden iletilir.",
+        p: "Kişisel verileriniz; yetkisiz erişim, kayıp ve değiştirilmeye karşı uygun teknik ve idari tedbirlerle korunur. Form servisi aktif edildiğinde gönderimler HTTPS üzerinden iletilir; servis aktif değilse mail uygulamanız üzerinden gönderim yapılır.",
       },
       {
         h: "Üçüncü Taraf Bağlantılar",
@@ -1776,7 +1630,7 @@ const LEGAL_DOCS = {
       },
       {
         h: "Kullandığımız Çerez Türleri",
-        p: "Zorunlu çerezler (sitenin çalışması için), tercih çerezleri (örn. çerez onayı kararınız) ve — eklenmesi halinde — analitik çerezler kullanılır. Bu sitede şu an üçüncü taraf reklam çerezi kullanılmamaktadır.",
+        p: "Şu an üçüncü taraf reklam veya analitik çerezi kullanılmamaktadır. Site; çerez tercihinizi, teklif özeti ve çıkış penceresi durumunu tarayıcınızda yerel olarak saklayabilir. Analitik eklenirse yalnızca tercihinize göre çalıştırılır.",
       },
       {
         h: "Onayınız",
@@ -2109,14 +1963,16 @@ function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!getCookieConsent()) {
-      const t = setTimeout(() => setVisible(true), 1200);
-      return () => clearTimeout(t);
-    }
-    // Footer'dan "Çerez tercihini değiştir" tıklandığında yeniden göster
     const reopen = () => setVisible(true);
     window.addEventListener("bcd:open-cookie-prefs", reopen);
-    return () => window.removeEventListener("bcd:open-cookie-prefs", reopen);
+    let timer;
+    if (!getCookieConsent()) {
+      timer = setTimeout(() => setVisible(true), 1200);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+      window.removeEventListener("bcd:open-cookie-prefs", reopen);
+    };
   }, []);
 
   function accept() {
@@ -2142,7 +1998,7 @@ function CookieBanner() {
           Çerez Bildirimi
         </p>
         <p className="mt-2 text-sm leading-6 text-white/75">
-          Bu site, deneyimini iyileştirmek için çerez kullanır. Detaylar için{" "}
+          Bu site tercihlerini tarayıcında saklar. Analitik eklenirse yalnızca onayına göre çalışır. Detaylar için{" "}
           <button
             type="button"
             onClick={() => window.dispatchEvent(new CustomEvent("bcd:open-cerez"))}
@@ -2301,6 +2157,7 @@ function Footer() {
 
 export default function App() {
   useMagneticButtons();
+  useInitialHashScroll();
   return (
     <>
       <ScrollProgress />
