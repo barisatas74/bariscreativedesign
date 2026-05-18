@@ -949,7 +949,7 @@ function Pricing() {
   }
 
   return (
-    <section id="teklif" className="relative overflow-hidden bg-ink py-10 text-white scroll-mt-20 sm:py-12 lg:min-h-[calc(100svh-5rem)] lg:flex lg:items-center">
+    <section id="teklif" className="relative overflow-hidden bg-ink py-8 text-white scroll-mt-20 sm:py-10 lg:min-h-[calc(100svh-5rem)] lg:flex lg:items-center">
       <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-12 h-96 w-[36rem]" />
       <div className="ambient-cloud pointer-events-none absolute -right-40 bottom-12 hidden h-96 w-[40rem] md:block" />
 
@@ -963,7 +963,7 @@ function Pricing() {
         >
           <div className="max-w-3xl">
             <SectionLabel tone="light">Teklif & Uygun Çözüm</SectionLabel>
-            <h2 className="font-display text-[clamp(2rem,3.4vw,3.05rem)] font-black leading-[1.02]">
+            <h2 className="font-display text-[clamp(1.9rem,3.1vw,2.8rem)] font-black leading-[1.02]">
               Çözümünü seç, kapsamı birlikte netleştirelim.
             </h2>
           </div>
@@ -977,13 +977,13 @@ function Pricing() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={stagger}
-          className="mt-6 grid gap-4 lg:grid-cols-3"
+          className="mt-4 grid gap-4 lg:grid-cols-3"
         >
           {solutionTracks.map((track) => (
             <motion.article
               key={track.name}
               variants={fadeUp}
-              className={`group relative flex min-h-[360px] flex-col overflow-hidden rounded-[26px] p-5 transition duration-300 hover:-translate-y-1 sm:p-6 ${
+              className={`group relative flex min-h-[430px] flex-col overflow-hidden rounded-[26px] p-5 transition duration-300 hover:-translate-y-1 sm:p-6 ${
                 track.highlighted
                   ? "bg-acid text-ink shadow-[0_26px_80px_rgba(215,255,54,0.25)]"
                   : "border border-white/10 bg-white/[0.045] text-white hover:border-white/24 hover:bg-white/[0.07]"
@@ -999,14 +999,14 @@ function Pricing() {
                   </span>
                 )}
               </div>
-              <h3 className="mt-3 font-display text-[clamp(1.7rem,2.4vw,2.35rem)] font-black leading-[0.96]">
+              <h3 className="mt-3 font-display text-[clamp(1.65rem,2.2vw,2.2rem)] font-black leading-[0.96]">
                 {track.name}
               </h3>
-              <p className={`mt-3 text-sm font-semibold leading-6 ${track.highlighted ? "text-ink/74" : "text-white/62"}`}>
+              <p className={`mt-3 text-sm font-semibold leading-5 ${track.highlighted ? "text-ink/74" : "text-white/62"}`}>
                 {track.desc}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                {track.bestFor.slice(0, 2).map((item) => (
+                {track.bestFor.map((item) => (
                   <span
                     key={item}
                     className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
@@ -1017,8 +1017,8 @@ function Pricing() {
                   </span>
                 ))}
               </div>
-              <ul className="mt-5 grid gap-2 text-sm font-semibold">
-                {track.features.slice(0, 2).map((feature) => (
+              <ul className="mt-4 grid gap-2 text-sm font-semibold">
+                {track.features.slice(0, 4).map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
                     <span
                       className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
