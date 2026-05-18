@@ -74,6 +74,7 @@ const titleReveal = {
 
 const navItems = [
   ["Hizmetler", "#hizmetler"],
+  ["Sektörler", "#sektorler"],
   ["Yaklaşım", "#yaklasim"],
   ["Süreç", "#surec"],
   ["Teklif", "#teklif"],
@@ -371,7 +372,11 @@ function Header() {
               key={label}
               href={href}
               onClick={(event) => scrollToSection(event, href)}
-              className="text-sm font-semibold text-white/70 transition hover:text-white"
+              className={`text-sm font-semibold transition hover:text-white ${
+                href === "#sektorler"
+                  ? "rounded-full border border-acid/30 px-3 py-2 text-acid hover:border-acid hover:bg-acid hover:text-ink"
+                  : "text-white/70"
+              }`}
             >
               {label}
             </a>
@@ -511,7 +516,11 @@ function Hero() {
 
 function ClientLogos() {
   return (
-    <section aria-label="Hizmet verilen sektörler" className="relative overflow-hidden bg-ink py-14 text-white sm:py-16">
+    <section
+      id="sektorler"
+      aria-label="Hizmet verilen sektörler"
+      className="relative overflow-hidden bg-ink py-14 text-white scroll-mt-20 sm:py-16"
+    >
       <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-0 h-72 w-[32rem]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
