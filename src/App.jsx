@@ -617,10 +617,10 @@ function Services() {
 
 function Manifesto() {
   return (
-    <section id="yaklasim" className="scroll-scene relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-bone py-12 text-ink scroll-mt-20 sm:py-16">
+    <section id="yaklasim" className="scroll-scene relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink py-12 text-white scroll-mt-20 sm:py-16">
       <div className="ambient-cloud ambient-cloud--bright pointer-events-none absolute right-[-16vw] top-[-16vh] h-[44rem] w-[48rem] [--cloud-opacity-end:0.62] [--cloud-opacity-start:0.36]" />
       <div className="ambient-cloud ambient-cloud--soft ambient-cloud--slow pointer-events-none absolute -left-36 bottom-6 h-80 w-[34rem]" />
-      <div className="pointer-events-none absolute -left-14 bottom-[-8vh] font-display text-[18vw] font-black uppercase leading-none text-ink/[0.04]">
+      <div className="pointer-events-none absolute -left-14 bottom-[-8vh] font-display text-[18vw] font-black uppercase leading-none text-white/[0.04]">
         BCD
       </div>
 
@@ -633,17 +633,17 @@ function Manifesto() {
           className="max-w-4xl"
         >
           <motion.div variants={fadeUp}>
-            <SectionLabel>Yaklaşım</SectionLabel>
-            <h2 className="font-display text-[clamp(3.4rem,8vw,8.4rem)] font-black lowercase leading-[0.82] tracking-normal text-ink">
+            <SectionLabel tone="light">Yaklaşım</SectionLabel>
+            <h2 className="font-display text-[clamp(3.4rem,8vw,8.4rem)] font-black lowercase leading-[0.82] tracking-normal text-white">
               tasarım
-              <span className="block text-transparent [-webkit-text-stroke:2px_#050505]">
+              <span className="block text-transparent [-webkit-text-stroke:2px_#ffffff]">
                 sadece
               </span>
               <span className="block text-acid [text-shadow:4px_4px_0_#050505]">
                 güzel değil.
               </span>
             </h2>
-            <p className="mt-7 max-w-2xl text-xl font-bold leading-snug text-ink/75 sm:text-2xl">
+            <p className="mt-7 max-w-2xl text-xl font-bold leading-snug text-white/72 sm:text-2xl">
               Güven veren, hızlı anlaşılabilen ve müşteriyi aksiyona yaklaştıran
               dijital deneyimler tasarlarım.
             </p>
@@ -656,13 +656,13 @@ function Manifesto() {
             whileInView={{ opacity: 1, y: 0, rotate: -3 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute left-0 top-4 w-[78%] rounded-[34px] bg-ink p-7 text-white shadow-[0_30px_90px_rgba(5,5,5,0.28)] sm:p-9"
+            className="absolute left-0 top-4 w-[78%] rounded-[34px] bg-white p-7 text-ink shadow-[0_30px_90px_rgba(255,255,255,0.12)] sm:p-9"
           >
             <span className="font-display text-7xl font-black text-acid">01</span>
             <p className="mt-10 font-display text-4xl font-black leading-none sm:text-5xl">
               İlk izlenim saniyeler içinde kurulur.
             </p>
-            <p className="mt-5 text-base font-semibold leading-7 text-white/62">
+            <p className="mt-5 text-base font-semibold leading-7 text-ink/62">
               Bu yüzden sayfanın ritmini, hiyerarşisini ve güven hissini daha ilk
               ekranda netleştiririm.
             </p>
@@ -673,13 +673,13 @@ function Manifesto() {
             whileInView={{ opacity: 1, y: 0, rotate: 4 }}
             viewport={{ once: true, amount: 0.35 }}
             transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute right-0 top-36 w-[72%] rounded-[34px] border border-ink/10 bg-white p-7 shadow-[0_28px_80px_rgba(5,5,5,0.14)] sm:p-9"
+            className="absolute right-0 top-36 w-[72%] rounded-[34px] border border-white/10 bg-white/[0.06] p-7 text-white shadow-[0_28px_80px_rgba(0,0,0,0.28)] backdrop-blur sm:p-9"
           >
-            <span className="font-display text-7xl font-black text-ink/10">02</span>
+            <span className="font-display text-7xl font-black text-acid/70">02</span>
             <p className="mt-10 font-display text-4xl font-black leading-none sm:text-5xl">
               Her ekran bir satış konuşmasıdır.
             </p>
-            <p className="mt-5 text-base font-semibold leading-7 text-ink/62">
+            <p className="mt-5 text-base font-semibold leading-7 text-white/62">
               Süslemek yerine hedefe götüren arayüzler kurarım: net mesaj, güçlü
               kontrast, kolay aksiyon.
             </p>
