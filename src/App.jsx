@@ -47,7 +47,6 @@ const SCROLL_OFFSET = 80;
 const SECTION_SCROLL_ADJUST = {
   "#yaklasim": 56,
   "#surec": 56,
-  "#teklif": 96,
 };
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -950,26 +949,42 @@ function Pricing() {
   }
 
   return (
-    <section id="teklif" className="relative overflow-hidden bg-ink pb-20 pt-16 text-white scroll-mt-20 sm:pb-24 sm:pt-[4.5rem]">
+    <section id="teklif" className="relative overflow-hidden bg-ink py-12 text-white scroll-mt-20 sm:py-14 lg:min-h-[calc(100svh-5rem)] lg:flex lg:items-center">
       <div className="ambient-cloud ambient-cloud--soft pointer-events-none absolute -left-32 top-12 h-96 w-[36rem]" />
       <div className="ambient-cloud pointer-events-none absolute -right-40 bottom-12 hidden h-96 w-[40rem] md:block" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-6 px-5 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.35 }}
           variants={fadeUp}
-          className="max-w-3xl"
+          className="max-w-xl"
         >
           <SectionLabel tone="light">Teklif & Uygun Çözüm</SectionLabel>
-          <h2 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-black leading-[1.02]">
-            Rakamdan önce ihtiyacı netleştirelim.
+          <h2 className="font-display text-[clamp(2rem,4.2vw,3.6rem)] font-black leading-[1.02]">
+            Doğru çözümü birlikte seçelim.
           </h2>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
-            Her projenin kapsamı farklı. Bu yüzden önce markanı, hedefini ve
-            önceliğini anlarım; sonra sana net, samimi ve sürprizsiz bir teklif sunarım.
+          <p className="mt-4 text-base font-semibold leading-7 text-white/62">
+            Rakamdan önce ihtiyacı netleştiririz. Sen hangi başlığa yakın olduğunu seç,
+            ben kapsamı sadeleştirip samimi teklif haline getireyim.
           </p>
+
+          <div className="mt-6 grid gap-3">
+            {[
+              ["01", "Kısa keşif", "İşini ve hedefini anlarız."],
+              ["02", "Net kapsam", "Gereksiz işi ayıklarız."],
+              ["03", "Samimi teklif", "Sürprizsiz yol haritası çıkar."],
+            ].map(([number, title, text]) => (
+              <div key={title} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+                <span className="font-display text-3xl font-black text-acid">{number}</span>
+                <div>
+                  <p className="font-display text-base font-black">{title}</p>
+                  <p className="text-xs font-semibold leading-5 text-white/55">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         <motion.div
@@ -977,123 +992,83 @@ function Pricing() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={stagger}
-          className="mt-8 grid gap-5 lg:grid-cols-3"
+          className="grid gap-3"
         >
           {solutionTracks.map((track) => (
             <motion.article
               key={track.name}
               variants={fadeUp}
-              className={`group relative flex flex-col overflow-hidden rounded-[28px] p-7 transition duration-500 hover:-translate-y-1 sm:p-8 ${
+              className={`group relative overflow-hidden rounded-[26px] p-5 transition duration-300 hover:-translate-y-1 sm:p-6 ${
                 track.highlighted
-                  ? "bg-acid text-ink shadow-[0_30px_90px_rgba(215,255,54,0.28)]"
-                  : "border border-white/10 bg-white/[0.04] text-white hover:border-white/25"
+                  ? "bg-acid text-ink shadow-[0_26px_80px_rgba(215,255,54,0.25)]"
+                  : "border border-white/10 bg-white/[0.045] text-white hover:border-white/24 hover:bg-white/[0.07]"
               }`}
             >
-              {track.highlighted && (
-                <span className="absolute right-6 top-6 rounded-full bg-ink px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-acid">
-                  En dengeli
-                </span>
-              )}
-              <p className={`text-xs font-black uppercase tracking-[0.22em] ${track.highlighted ? "text-ink/65" : "text-white/45"}`}>
-                {track.eyebrow}
-              </p>
-              <h3 className="mt-4 font-display text-3xl font-black leading-none sm:text-4xl">
-                {track.name}
-              </h3>
-              <p className={`mt-4 text-sm font-semibold leading-6 ${track.highlighted ? "text-ink/72" : "text-white/65"}`}>
-                {track.desc}
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {track.bestFor.map((item) => (
-                  <span
-                    key={item}
-                    className={`rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] ${
-                      track.highlighted ? "bg-ink/10 text-ink/70" : "bg-white/8 text-white/55"
+              <div className="grid gap-5 xl:grid-cols-[1fr_18rem] xl:items-center">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className={`text-[11px] font-black uppercase tracking-[0.22em] ${track.highlighted ? "text-ink/62" : "text-white/45"}`}>
+                      {track.eyebrow}
+                    </p>
+                    {track.highlighted && (
+                      <span className="rounded-full bg-ink px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-acid">
+                        En dengeli
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="mt-3 font-display text-[clamp(1.8rem,3vw,2.8rem)] font-black leading-[0.95]">
+                    {track.name}
+                  </h3>
+                  <p className={`mt-3 max-w-2xl text-sm font-semibold leading-6 ${track.highlighted ? "text-ink/74" : "text-white/62"}`}>
+                    {track.desc}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {track.bestFor.map((item) => (
+                      <span
+                        key={item}
+                        className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+                          track.highlighted ? "bg-ink/10 text-ink/70" : "bg-white/8 text-white/55"
+                        }`}
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <ul className="grid gap-2 text-sm font-semibold">
+                    {track.features.slice(0, 3).map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <span
+                          className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
+                            track.highlighted ? "bg-ink text-acid" : "bg-acid text-ink"
+                          }`}
+                        >
+                          <Check className="h-3 w-3" strokeWidth={3} />
+                        </span>
+                        <span className={track.highlighted ? "text-ink/84" : "text-white/76"}>
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={() => goToContactWithSolution(track)}
+                    className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-black transition ${
+                      track.highlighted
+                        ? "bg-ink text-white hover:bg-white hover:text-ink"
+                        : "border border-white/20 hover:border-white hover:bg-white hover:text-ink"
                     }`}
                   >
-                    {item}
-                  </span>
-                ))}
+                    {track.cta}
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-              <ul className="mt-6 flex-1 space-y-3 text-sm font-semibold">
-                {track.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <span
-                      className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                        track.highlighted ? "bg-ink text-acid" : "bg-acid text-ink"
-                      }`}
-                    >
-                      <Check className="h-3 w-3" strokeWidth={3} />
-                    </span>
-                    <span className={track.highlighted ? "text-ink/85" : "text-white/80"}>
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={() => goToContactWithSolution(track)}
-                className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-black transition ${
-                  track.highlighted
-                    ? "bg-ink text-white hover:bg-white hover:text-ink"
-                    : "border border-white/20 hover:border-white hover:bg-white hover:text-ink"
-                }`}
-              >
-                {track.cta}
-                <ArrowRight className="h-4 w-4" />
-              </button>
             </motion.article>
           ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur sm:p-8"
-        >
-          <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-            <div>
-              <p className="font-display text-xs font-black uppercase tracking-[0.22em] text-acid">
-                Nasıl ilerliyoruz?
-              </p>
-              <h3 className="mt-3 font-display text-[clamp(1.6rem,3vw,2.6rem)] font-black leading-[1.05]">
-                Önce konuşuruz, sonra netleştiririz.
-              </h3>
-              <p className="mt-4 text-sm font-semibold leading-6 text-white/62 sm:text-base sm:leading-7">
-                Kısa bir ön görüşmede hedefini, sayfa ihtiyacını, içerik durumunu ve
-                teslim beklentini anlarım. Sonrasında sana sadece ihtiyacın olan kapsamı öneririm.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {[
-                ["01", "Kısa keşif", "İşini ve beklentini anlarız."],
-                ["02", "Net kapsam", "Gereksiz işi ayıklarız."],
-                ["03", "Samimi teklif", "Sürprizsiz bir yol haritası çıkar."],
-              ].map(([number, title, text]) => (
-                <div key={title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                  <p className="font-display text-3xl font-black text-acid">{number}</p>
-                  <p className="mt-3 font-display text-base font-black">{title}</p>
-                  <p className="mt-2 text-xs font-semibold leading-5 text-white/55">{text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm font-semibold leading-6 text-white/62">
-              Kararsızsan direkt yaz; hangi çözümün sana uyduğunu birlikte seçeriz.
-            </p>
-            <a
-              href="#iletisim"
-              onClick={(event) => scrollToSection(event, "#iletisim")}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-acid px-6 py-3 text-sm font-black text-ink transition hover:bg-white"
-            >
-              Projeni anlat
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
         </motion.div>
       </div>
     </section>
